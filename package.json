@@ -1,0 +1,55 @@
+{
+  "name": "mirb",
+  "version": "0.1.0",
+  "description": "mirrorball \u2014 instant SSH port forwarding. mirb 10.0.0.7 3000 3010 8080",
+  "type": "module",
+  "license": "MIT",
+  "author": "Sanil Chawla <hi@sanil.co>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heysanil/mirrorball-cli.git"
+  },
+  "homepage": "https://github.com/heysanil/mirrorball-cli",
+  "bugs": {
+    "url": "https://github.com/heysanil/mirrorball-cli/issues"
+  },
+  "bin": {
+    "mirb": "./mirb.ts",
+    "mirrorball": "./mirb.ts"
+  },
+  "files": [
+    "mirb.ts",
+    "commands",
+    "core",
+    "ui"
+  ],
+  "keywords": [
+    "mirb",
+    "mirrorball",
+    "ssh",
+    "port-forwarding",
+    "tunnel",
+    "cli",
+    "bun",
+    "devtools"
+  ],
+  "scripts": {
+    "dev": "bunx bunli dev --entry ./mirb.ts --",
+    "build": "bunx bunli build --targets native",
+    "build:all": "bunx bunli build --targets all",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bunli/core": "0.9.1",
+    "@bunli/utils": "0.6.0",
+    "nanoid": "6.0.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@bunli/test": "0.6.0",
+    "@types/bun": "latest",
+    "bunli": "0.9.1",
+    "typescript": "^5"
+  }
+}
