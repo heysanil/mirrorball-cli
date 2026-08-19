@@ -230,7 +230,14 @@ export function detectUnicode(env: Record<string, string | undefined> = process.
 function painter(hex: string, level: ColorLevel): Paint {
   if (level === 'none') return identity
 
-  const seq = Bun.color(hex, level === 'truecolor' ? 'ansi' : 'ansi-256')
+  // 'ansi-16m', never 'ansi'. `Bun.color(hex, 'ansi')` re-decides colour support from the
+  // environment and returns "" when it disapproves — so it would silently override the
+  // level we just resolved. That resolution is deliberate: it already honours NO_COLOR,
+  // FORCE_COLOR, terminal.supportsColor and COLORTERM, in that order. Letting Bun overrule
+  // it means `FORCE_COLOR=3 mirb … | less -R` comes out monochrome despite being asked for
+  // colour, and it makes the renderer's output depend on where it runs rather than on what
+  // it was told. Naming the format keeps `level` authoritative.
+  const seq = Bun.color(hex, level === 'truecolor' ? 'ansi-16m' : 'ansi-256')
   if (!seq) return identity
 
   // Empty strings are common in padding maths; wrapping them would emit escapes that

@@ -918,3 +918,46 @@ describe('the live renderer, replayed onto a terminal', () => {
     display.stop()
   })
 })
+
+describe('colour survives a hostile environment', () => {
+  /**
+   * REGRESSION GUARD - this shipped, and only CI caught it.
+   *
+   * `Bun.color(hex, 'ansi')` re-decides colour support from the environment and returns ""
+   * when it disapproves, which silently overrode the level the theme had already resolved.
+   * Locally everything looked right; on a runner with no TTY and TERM=dumb, an explicit
+   * `level: 'truecolor'` produced no colour at all - and so would
+   * `FORCE_COLOR=3 mirb ... | less -R`.
+   *
+   * The whole point of resolving a level is that it is then authoritative. These assertions
+   * pass an environment that would fail Bun's own detection, so a regression to the bare
+   * 'ansi' format fails here rather than months later in someone's pipeline.
+   */
+  const HOSTILE = { CI: 'true', TERM: 'dumb' }
+
+  test('an explicit truecolor level still emits 24-bit sequences', () => {
+    const theme = createTheme({ level: 'truecolor', unicode: true, env: HOSTILE })
+    expect(theme.ok('x')).toContain('38;2;')
+    expect(theme.ok('x')).not.toBe('x')
+  })
+
+  test('an explicit 256 level still emits indexed sequences', () => {
+    const theme = createTheme({ level: 'ansi256', unicode: true, env: HOSTILE })
+    expect(theme.ok('x')).toContain('38;5;')
+  })
+
+  test('refused and failed stay distinct where Bun would have dropped colour', () => {
+    const theme = createTheme({ level: 'truecolor', unicode: true, env: HOSTILE })
+    expect(theme.forward.refused.paint('x')).not.toBe(theme.forward.failed.paint('x'))
+  })
+
+  test('level none is still honoured - this is not a licence to always colour', () => {
+    const theme = createTheme({ level: 'none', unicode: true, env: HOSTILE })
+    expect(theme.ok('x')).toBe('x')
+  })
+
+  test('NO_COLOR is still respected when no level is forced', () => {
+    const theme = createTheme({ env: { ...HOSTILE, NO_COLOR: '1' }, unicode: true })
+    expect(theme.ok('x')).toBe('x')
+  })
+})
