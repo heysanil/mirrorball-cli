@@ -1,0 +1,55 @@
+name: Feature request
+description: Suggest a capability or a change in behaviour.
+title: "feat: "
+labels: ["enhancement", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        mirb aims to stay small: one obvious command, sensible defaults, and no flag you
+        need to look up twice. Proposals that make the common case shorter tend to land;
+        proposals that add a flag for a rare case tend not to. Make the case either way —
+        a good problem statement beats a good solution.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched the existing issues and discussions for this idea.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do today, and where does mirb get in the way?
+      placeholder: >
+        I forward the same four ports to staging every morning and ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like mirb to do
+      description: Show the command line you wish worked, and what you'd expect it to print.
+      placeholder: |
+        $ mirb staging --something
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+      description: >
+        Including "I do it by hand with ssh -L and a shell alias" — knowing the workaround
+        tells us how much the feature is worth.
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I'd be willing to open a pull request for this.

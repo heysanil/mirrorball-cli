@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/heysanil/mirrorball-cli/tree/main/docs
+    about: Usage guides, the reference, and the design notes behind mirb's defaults.
+  - name: Contributing guide
+    url: https://github.com/heysanil/mirrorball-cli/blob/main/CONTRIBUTING.md
+    about: Setting up the repo, running the tests, and the commit conventions.

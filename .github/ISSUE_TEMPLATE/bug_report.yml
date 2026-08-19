@@ -1,0 +1,104 @@
+name: Bug report
+description: Something in mirb behaves differently than documented.
+title: "bug: "
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file this. The environment block below is the
+        single most useful thing you can give us — ssh behaviour varies a lot between
+        OpenSSH versions and platforms, and mirb is mostly a very opinionated wrapper
+        around ssh.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched the existing issues and this isn't a duplicate.
+          required: true
+        - label: I can reproduce this with the latest release of mirb.
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did mirb do, exactly? Paste the full terminal output if you can.
+      placeholder: |
+        $ mirb 10.0.0.7 3000 8080
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: >
+        The exact command, plus anything about the remote host that matters
+        (bastion/jump host, ProxyCommand, an ssh_config alias, a service that
+        wasn't listening yet).
+      value: |
+        1. `mirb ...`
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Run these and paste the output verbatim.
+      render: shell
+      value: |
+        # mirb --version
+        <paste>
+
+        # ssh -V
+        <paste>
+
+        # uname -srm     (or: `ver` on Windows)
+        <paste>
+
+        # bun --version  (only if you run mirb from source)
+        <paste>
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: How did you install mirb?
+      options:
+        - npm / bunx
+        - Prebuilt binary from a GitHub release
+        - Built from source
+        - Other (say so below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: session-logs
+    attributes:
+      label: Session logs
+      description: >
+        For a background session, `mirb logs <id>` is usually decisive. Machine output
+        (`--format json`) helps too. Redact hostnames and keys as needed — but please
+        keep the shape of what you redact (e.g. `bastion.example.com`, not `xxx`).
+      render: text
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Does plain `ssh -L` work where mirb doesn't? That's the most useful clue there is.
