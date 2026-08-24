@@ -1,0 +1,35 @@
+// mirb.dev is deployed as static assets with no Worker script behind it.
+//
+// `mode: "static"` in press.config.tsx prerenders every route — 24 HTML pages, the
+// FlexSearch index, llms.txt, the sitemap — so there is nothing left for a Worker to do
+// at request time. Serving assets directly is cheaper, has no cold start, and avoids the
+// serverless bundle entirely.
+//
+// That last part is not just a preference. waku/adapters/cloudflare also emits a
+// serverless entry, and that entry does not currently boot on workerd: its rolldown
+// runtime shim calls createRequire(import.meta.url) where import.meta.url is undefined,
+// and the Worker dies at startup with "The argument 'path' must be a file URL object...".
+// A failed Worker takes the whole deployment down, static assets included. Verified with
+// `wrangler dev` against a real build.
+//
+// scripts/strip-server-deploy.mjs runs after the build and removes the
+// .wrangler/deploy/config.json redirect the adapter writes, so `wrangler deploy` reads
+// THIS file rather than the generated dist/server/wrangler.json. Without that step the
+// redirect wins silently and the broken Worker ships.
+//
+// The custom domain for mirb.dev is attached to the Worker once, out of band. Wrangler
+// leaves existing routes alone when the deployed config has no `routes` key, so it
+// survives every subsequent deploy.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mirb-dev",
+  "compatibility_date": "2025-11-17",
+  "assets": {
+    "directory": "./dist/public",
+    // /docs/reference/cli/ redirects to /docs/reference/cli, matching the URLs in
+    // sitemap.xml and every internal link.
+    "html_handling": "drop-trailing-slash",
+    // Serve the prerendered 404 page rather than a bare Worker 404.
+    "not_found_handling": "404-page"
+  }
+}

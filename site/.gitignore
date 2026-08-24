@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.wrangler/
+.source/
+
+# Copied from ../scripts by scripts/sync-installers.mjs on predev and prebuild.
+public/install.sh
+public/install.ps1
