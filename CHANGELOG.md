@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Nothing yet. Add entries here as they land — one bullet per user-visible change,
 under `Added` / `Changed` / `Deprecated` / `Removed` / `Fixed` / `Security`.
 
-## [0.1.0] - 2026-08-19
+## [0.1.0] - 2026-08-24
 
 Initial release.
 
