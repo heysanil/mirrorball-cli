@@ -159,9 +159,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          for pkg in npm/mirb-*/; do
+          # The glob must not match the root package: npm/mirb-cli-*/ excludes npm/mirb-cli/,
+          # whereas a looser npm/mirb-*/ would sweep the root in and publish it first.
+          for pkg in npm/mirb-cli-*/; do
             echo "publishing $pkg"
             (cd "$pkg" && npm publish --access public --provenance)
           done
-          echo "publishing npm/mirb/"
-          (cd npm/mirb && npm publish --access public --provenance)
+          echo "publishing npm/mirb-cli/"
+          (cd npm/mirb-cli && npm publish --access public --provenance)

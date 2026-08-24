@@ -1,12 +1,12 @@
 {
-  "name": "mirb-linux-arm64",
+  "name": "mirb-cli-darwin-x64",
   "version": "0.1.0",
-  "description": "The linux-arm64 binary for mirb.",
+  "description": "The darwin-x64 binary for mirb.",
   "os": [
-    "linux"
+    "darwin"
   ],
   "cpu": [
-    "arm64"
+    "x64"
   ],
   "preferUnplugged": true,
   "engines": {

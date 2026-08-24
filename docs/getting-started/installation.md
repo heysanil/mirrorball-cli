@@ -119,29 +119,32 @@ $env:MIRB_VERSION = '0.1.0'; irm https://raw.githubusercontent.com/heysanil/mirr
 
 ## npm, bun, or one-shot
 
-The package is named after the command, **`mirb`**:
+The package is **`mirb-cli`**; the command it installs is **`mirb`**. They differ because
+npm refused the bare name `mirb` as too similar to existing packages — a registry-side check
+on new names, unrelated to whether the name is free. The same split shows up in
+`create-react-app` and `@angular/cli`.
 
 ```sh
-npm install -g mirb
-bun add -g mirb
-pnpm add -g mirb
-yarn global add mirb
+npm install -g mirb-cli
+bun add -g mirb-cli
+pnpm add -g mirb-cli
+yarn global add mirb-cli
 ```
 
-That single package links both names, so `mirb` and `mirrorball` are equally installed.
+That single package links both commands, so `mirb` and `mirrorball` are equally installed.
 
 Or without installing anything:
 
 ```sh
-bunx mirb 10.0.0.7 3000
-npx mirb 10.0.0.7 3000
+bunx mirb-cli 10.0.0.7 3000
+npx mirb-cli 10.0.0.7 3000
 ```
 
 ### How this works, and the one way it breaks
 
 npm has no way to say "ship a different binary per platform" in a single package, so
 mirrorball uses the pattern esbuild, turbo, swc, biome and Rollup all landed on
-independently: one package per platform (`mirb-darwin-arm64`, `mirb-linux-x64`, …), each
+independently: one package per platform (`mirb-cli-darwin-arm64`, `mirb-cli-linux-x64`, …), each
 tagged with `os` and `cpu`, plus a root `mirb` package that lists all five as **optional**
 dependencies and whose `bin` entries are a tiny Node shim dispatching to whichever one
 landed.
@@ -155,9 +158,9 @@ The failure mode worth knowing: an optional dependency that will not install is 
 package is missing and the shim will tell you exactly that:
 
 ```
-mirb: the platform package "mirb-darwin-arm64" for darwin-arm64 is not installed.
+mirb: the platform package "mirb-cli-darwin-arm64" for darwin-arm64 is not installed.
 It is an optional dependency, so a failed or skipped optional install is silent.
-Try:  npm install mirb-darwin-arm64
+Try:  npm install mirb-cli-darwin-arm64
 ```
 
 A clean reinstall (`rm -rf node_modules package-lock.json && npm install`) fixes it.
@@ -248,7 +251,7 @@ whenever stdout is not a terminal.)
 | Installed with | Upgrade |
 | --- | --- |
 | Install script | Re-run it. It resolves the latest release and replaces the binary in place. |
-| npm / bun | `npm install -g mirb@latest`, `bun add -g mirb@latest` |
+| npm / bun | `npm install -g mirb-cli@latest`, `bun add -g mirb-cli@latest` |
 | Source | `git pull && bun install && bun run build` |
 
 To pin or roll back, pass a version:

@@ -1,5 +1,5 @@
 {
-  "name": "mirb",
+  "name": "mirb-cli",
   "version": "0.1.0",
   "description": "mirrorball \u2014 instant SSH port forwarding. mirb 10.0.0.7 3000 3010 8080",
   "type": "module",

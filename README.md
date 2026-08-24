@@ -89,8 +89,8 @@ the binary — a symlink, or a `mirrorball.cmd` shim on Windows — so either na
 From npm, if you would rather pin it in a project:
 
 ```sh
-npm i -g mirb       # or: bun add -g mirb
-bunx mirb 10.0.0.7 3000
+npm i -g mirb-cli       # or: bun add -g mirb-cli
+bunx mirb-cli 10.0.0.7 3000
 ```
 
 From source (needs [Bun](https://bun.sh) 1.3+, and nothing else):

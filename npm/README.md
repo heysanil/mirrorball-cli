@@ -30,24 +30,24 @@ npm/
 │   ├── bin/mirb               ← Node shim (generated; see "The shim")
 │   ├── README.md              ← copied from the repo root
 │   └── LICENSE                ← copied from the repo root
-├── mirb-darwin-arm64/
+├── mirb-cli-darwin-arm64/
 │   ├── package.json           ← os: ["darwin"], cpu: ["arm64"]
 │   └── bin/mirb               ← the compiled binary, mode 0755
-├── mirb-darwin-x64/
-├── mirb-linux-arm64/
-├── mirb-linux-x64/
-└── mirb-windows-x64/
+├── mirb-cli-darwin-x64/
+├── mirb-cli-linux-arm64/
+├── mirb-cli-linux-x64/
+└── mirb-cli-windows-x64/
     ├── package.json           ← os: ["win32"], cpu: ["x64"]
     └── bin/mirb.exe
 ```
 
 The generated package directories are build output, not source. `.gitignore` covers
 `npm/*/bin/`; if you would rather not track the generated `package.json` files either,
-add `npm/mirb/` and `npm/mirb-*/` to it. This file is the only thing here worth committing.
+add `npm/mirb-cli/` and `npm/mirb-*/` to it. This file is the only thing here worth committing.
 
 ### Naming
 
-Package names use **bunli's** target triple (`mirb-windows-x64`), matching
+Package names use **bunli's** target triple (`mirb-cli-windows-x64`), matching
 `bunli.config.ts` `build.targets` and the GitHub Release asset names. The `os` field inside
 uses **npm's** name for the same platform (`win32`). The two vocabularies disagree; the
 generator's `PLATFORMS` table is the single place that translates, and the shim's dispatch
@@ -135,4 +135,4 @@ to dispatch to.
 
 The repo's own `package.json` is the *development* manifest: its `bin` points both names at
 `mirb.ts` and it exists so `bun run` and `bunli` work. It is never published. The package on
-npm is `npm/mirb/`, generated here, and its `bin` points at the shim.
+npm is `npm/mirb-cli/`, generated here, and its `bin` points at the shim.

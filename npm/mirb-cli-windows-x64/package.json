@@ -1,12 +1,12 @@
 {
-  "name": "mirb-darwin-arm64",
+  "name": "mirb-cli-windows-x64",
   "version": "0.1.0",
-  "description": "The darwin-arm64 binary for mirb.",
+  "description": "The windows-x64 binary for mirb.",
   "os": [
-    "darwin"
+    "win32"
   ],
   "cpu": [
-    "arm64"
+    "x64"
   ],
   "preferUnplugged": true,
   "engines": {

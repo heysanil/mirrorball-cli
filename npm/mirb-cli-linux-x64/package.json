@@ -1,5 +1,5 @@
 {
-  "name": "mirb-linux-x64",
+  "name": "mirb-cli-linux-x64",
   "version": "0.1.0",
   "description": "The linux-x64 binary for mirb.",
   "os": [

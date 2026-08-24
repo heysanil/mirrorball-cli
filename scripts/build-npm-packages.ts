@@ -146,6 +146,20 @@ function parseRepoField(repository: RootPackageJson['repository']): string | und
 /** The long-form alias published alongside the primary command. */
 const ALIAS_BIN_NAME = 'mirrorball'
 
+/**
+ * The npm package name, which is NOT the command name.
+ *
+ * npm rejected `mirb` as "too similar to existing packages" (mitt, mime, micro, mri, sirv,
+ * idb, nib) — a registry-side check on new names that has nothing to do with availability.
+ * So the package is `mirb-cli` while the command it installs stays `mirb`. That split is
+ * ordinary on npm: create-react-app, @angular/cli and vite-node all do it.
+ *
+ * Everything the user types is the bin name; everything npm resolves is this.
+ */
+function derivePkgName(pkg: RootPackageJson): string {
+  return pkg.name
+}
+
 /** npm links whatever key `bin` uses, so the shim and the binaries must all agree on it. */
 function deriveBinName(pkg: RootPackageJson): string {
   if (typeof pkg.bin === 'string') return pkg.name
@@ -247,9 +261,10 @@ if (result.signal) {
 process.exit(result.status === null ? 1 : result.status)
 `
 
-function renderShim(binName: string): string {
+function renderShim(binName: string, pkgName: string): string {
   const table: Record<string, string> = {}
-  for (const p of PLATFORMS) table[p.runtimeKey] = `${binName}-${p.target}`
+  // Package names, not the bin name: the shim resolves these through node's module lookup.
+  for (const p of PLATFORMS) table[p.runtimeKey] = `${pkgName}-${p.target}`
 
   return SHIM_TEMPLATE.replace('__PLATFORM_PACKAGES__', JSON.stringify(table, null, 2)).replaceAll(
     '__BIN_NAME__',
@@ -422,6 +437,7 @@ async function main(): Promise<void> {
 
   const pkg = (await Bun.file(join(root, 'package.json')).json()) as RootPackageJson
   const binName = deriveBinName(pkg)
+  const pkgName = derivePkgName(pkg)
 
   const opts: Options = {
     version: parsed.version ?? pkg.version,
@@ -441,8 +457,8 @@ async function main(): Promise<void> {
   if (opts.dryRun) {
     console.log(`  source:  ${opts.source}${opts.source === 'release' ? ` (${opts.repo ?? 'no repo'})` : ''}`)
     console.log(`  out:     ${opts.outDir}`)
-    for (const p of PLATFORMS) console.log(`  package: ${binName}-${p.target}  (os=${p.npmOs} cpu=${p.npmCpu})`)
-    console.log(`  package: ${binName}  (root, ${PLATFORMS.length} optionalDependencies)`)
+    for (const p of PLATFORMS) console.log(`  package: ${pkgName}-${p.target}  (os=${p.npmOs} cpu=${p.npmCpu})`)
+    console.log(`  package: ${pkgName}  (root, ${PLATFORMS.length} optionalDependencies)`)
     return
   }
 
@@ -452,8 +468,8 @@ async function main(): Promise<void> {
   const optionalDependencies: Record<string, string> = {}
 
   for (const p of PLATFORMS) {
-    const pkgName = `${binName}-${p.target}`
-    const dir = join(opts.outDir, pkgName)
+    const platformPkg = `${pkgName}-${p.target}`
+    const dir = join(opts.outDir, platformPkg)
     await rm(dir, { recursive: true, force: true })
     await mkdir(join(dir, 'bin'), { recursive: true })
 
@@ -467,7 +483,7 @@ async function main(): Promise<void> {
     await chmod(dest, 0o755)
 
     await writeJson(join(dir, 'package.json'), {
-      name: pkgName,
+      name: platformPkg,
       version: opts.version,
       description: `The ${p.target} binary for ${binName}.`,
       // These two are the entire mechanism: npm refuses to install a package whose os/cpu
@@ -484,20 +500,20 @@ async function main(): Promise<void> {
       ...(pkg.homepage ? { homepage: pkg.homepage } : {})
     })
 
-    optionalDependencies[pkgName] = opts.version
-    console.log(`  wrote ${pkgName}`)
+    optionalDependencies[platformPkg] = opts.version
+    console.log(`  wrote ${platformPkg}`)
   }
 
-  const rootDir = join(opts.outDir, binName)
+  const rootDir = join(opts.outDir, pkgName)
   await rm(rootDir, { recursive: true, force: true })
   await mkdir(join(rootDir, 'bin'), { recursive: true })
 
   const shimPath = join(rootDir, 'bin', binName)
-  await Bun.write(shimPath, renderShim(binName))
+  await Bun.write(shimPath, renderShim(binName, pkgName))
   await chmod(shimPath, 0o755)
 
   await writeJson(join(rootDir, 'package.json'), {
-    name: binName,
+    name: pkgName,
     version: opts.version,
     description: pkg.description,
     ...(pkg.keywords ? { keywords: pkg.keywords } : {}),
@@ -527,8 +543,8 @@ async function main(): Promise<void> {
   const license = Bun.file(join(root, 'LICENSE'))
   if (await license.exists()) await Bun.write(join(rootDir, 'LICENSE'), await license.text())
 
-  console.log(`  wrote ${binName} (root)`)
-  console.log(`\nPublish with:\n  for d in ${opts.outDir}/*/; do (cd "$d" && npm publish --access public --provenance); done`)
+  console.log(`  wrote ${pkgName} (root)`)
+  console.log(`\nPublish with:\n  for d in ${opts.outDir}/${pkgName}-*/; do (cd "$d" && npm publish --access public --provenance); done\n  (cd ${opts.outDir}/${pkgName} && npm publish --access public --provenance)`)
 }
 
 main().catch((err: unknown) => {
