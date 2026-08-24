@@ -1,0 +1,68 @@
+name: Site
+
+# Deliberately separate from ci.yml rather than a job inside it.
+#
+# ci.yml is an OS matrix for a program about processes, sockets and signals — a Node/Vite
+# build has nothing to gain from running twice there. And adding `paths` filters to ci.yml
+# so it skipped docs-only PRs would make the CLI's gate conditional, which is a worse
+# change than a second file.
+#
+# scripts/** is in the filter because the installers are copied into the site at build
+# time and served from mirb.dev/install.sh.
+
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'docs/**', 'scripts/**', '.github/workflows/site.yml']
+  pull_request:
+    paths: ['site/**', 'docs/**', 'scripts/**', '.github/workflows/site.yml']
+
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # `lastModified: true` shells out to git log for each page's date.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.node-version
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - run: npm ci
+
+      # Anchors and on-disk link targets, which the build cannot check: the link
+      # validation plugin strips the #fragment before fetching, so a renamed heading
+      # would otherwise break 68 links silently. Also catches raw HTML, which the
+      # markdown compiler deletes rather than rejects.
+      - run: npm run check:docs
+
+      - run: npx tsc --noEmit
+
+      # linkValidationPlugin fetches every rendered internal link against the built app
+      # and fails on a 404, so this step is also the docs link checker.
+      - name: Build
+        run: npm run build
+        env:
+          # The adapter Workers Builds will select, so CI builds what production builds.
+          CLOUDFLARE: '1'
+
+      - name: No unrewritten .md links reached the output
+        run: '! grep -rl ''\.md"'' dist/public --include="*.html"'
+
+      - name: The adapter did not rewrite our wrangler config
+        run: git diff --exit-code -- wrangler.jsonc
+
+      - name: The served installer matches scripts/install.sh
+        run: diff -q ../scripts/install.sh dist/public/install.sh

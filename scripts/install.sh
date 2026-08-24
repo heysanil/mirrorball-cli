@@ -2,7 +2,7 @@
 #
 # mirb installer.
 #
-#   curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh
+#   curl -fsSL https://mirb.dev/install.sh | sh
 #   curl -fsSL .../install.sh | sh -s -- --version 0.2.0 --dir /usr/local/bin
 #
 # Written for POSIX sh, not bash. Piping into `sh` on Debian/Ubuntu runs this under
@@ -114,7 +114,7 @@ detect_platform() {
     Linux) OS="linux" ;;
     MINGW*|MSYS*|CYGWIN*|Windows_NT)
       die "this script does not run on Windows" \
-          "Use PowerShell instead: irm https://raw.githubusercontent.com/$REPO/main/scripts/install.ps1 | iex"
+          "Use PowerShell instead: irm https://mirb.dev/install.ps1 | iex"
       ;;
     *)
       die "unsupported operating system: $uname_s" \

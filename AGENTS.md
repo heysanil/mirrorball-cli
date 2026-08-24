@@ -45,8 +45,9 @@ commands/            CLI wiring — up, ls, stop, logs, __supervise, shared
 core/                pure logic and the runtime; never imports ui/
 ui/                  presentation only; may import core/
 test/                12 files; fixtures/fake-ssh.ts is the keystone
-docs/                22 pages + nav.json, Diátaxis-shaped
+docs/                22 pages + one meta.json per folder, Diátaxis-shaped
 scripts/             install.sh, install.ps1
+site/                mirb.dev (fumapress); reads ../docs. Node + npm, not Bun
 ```
 
 **`core/types.ts` is the contract.** Every module depends on it rather than on each other.
@@ -342,6 +343,10 @@ distinction, it confuses people). Plus `NO_COLOR`, `FORCE_COLOR`, `COLORTERM`, `
 | Add a build target | `bunli.config.ts` `build.targets` (single source now) |
 | Error message format in `ui/static.ts` | `commands/up.ts` parses `' error: '` / `' hint: '` out of the supervisor's log |
 | Anything user-facing | the docs page that documents it — `docs/reference/cli.md` says the binary wins, so drift is a doc bug |
+| Add or rename a docs page | that folder's `meta.json`. The trailing `"..."` will still surface it, but at the bottom and unordered |
+| `PALETTE` in `ui/theme.ts` | `site/src/app.css` — the site's landing tokens are a hand copy; nothing imports across the package boundary |
+| `scripts/install.sh` / `.ps1` | nothing, but the site serves them at `mirb.dev/install.sh`; a deploy has to follow, and `site.yml` watches `scripts/**` for that reason |
+| A heading in `docs/` | any link with a `#fragment` pointing at it — `site/scripts/check-docs.mjs` is what catches those, since the build's link validation strips fragments |
 
 **Deliberately duplicated:** four near-identical address-mapping tables (`bind.ts` policy,
 `ports.ts` bind side, `probe.ts` connect side, `ui/live.ts` display). They answer different
@@ -356,8 +361,18 @@ questions and unifying them would be wrong.
 - TypeScript strict, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`. Relative imports carry
   the `.ts` extension.
 - Conventional commits. No AI attribution in commit messages.
-- Docs pages carry `title` / `description` / `sidebar_position` frontmatter, and `docs/nav.json`
-  must stay a bijection with the files on disk.
+- Docs pages carry `title` / `description` / `sidebar_position` frontmatter. `pageSchema`
+  strips anything it does not know, so extra keys are silently dropped rather than rejected.
+- **Sidebar order lives in each folder's `meta.json`**, not in frontmatter. Every one ends
+  with `"..."`, the fumadocs rest operator: a page you forget to list lands at the bottom of
+  its section instead of vanishing. Permissive where informational, as with `ls`.
+- **`docs/` is plain CommonMark + GFM.** No raw HTML — the markdown compiler *deletes* it
+  rather than erroring, so a `<br/>` disappears silently. No stray `.json` either: fumadocs
+  globs every JSON under `docs/` and validates it as a meta file. Admonitions are
+  `:::note` / `:::warn[Title]`, blank-line delimited, via remark-directive.
+- Internal links are relative and keep the `.md` extension so they resolve on GitHub; they
+  must start with `./` or `../`, because that is the only form the site's link resolver
+  rewrites. `site/scripts/check-docs.mjs` enforces all of the above.
 
 ---
 
@@ -390,8 +405,53 @@ Honest list. None are secret; all were found by review rather than by users.
    trigger specifically so the cross-compile can be exercised on demand.
 9. **Nothing verifies the git tag matches `package.json`**, or that `compress` is still `false`.
    Both are human-checklist items.
-10. **Doc drift:** `docs/contributing/testing.md` describes a 6-file test tree (there are 12),
-    a scenario-table structure the fixture does not use, and claims a sub-2-second suite (~17 s).
+10. **The site's landing page restates CLI behaviour in its own prose.** `site/src/pages/index.tsx`
+    and `site/src/lib/states.ts` describe the four states and the comparison table directly, so
+    `docs/` is no longer the only place that can drift from the binary. Keep its claims to
+    things `README.md` or `docs/` already say.
+11. **`waku/adapters/cloudflare`'s serverless entry does not boot on workerd** — its rolldown
+    runtime shim calls `createRequire(import.meta.url)` where that is `undefined`. mirb.dev
+    sidesteps it by deploying static assets only and deleting the adapter's deploy redirect
+    (`site/scripts/strip-server-deploy.mjs`). If the site ever needs a dynamic route, that
+    upstream bug has to be solved first.
+12. **Adding a docs page needs a `fumapress dev` restart.** The content glob is expanded when
+    `press.config.tsx` is transformed, and `docs/` sits outside the Vite root, so new files are
+    not picked up live. Editing an existing page hot-reloads fine.
+
+---
+
+## The site
+
+`site/` builds **mirb.dev** with [Fumapress](https://press.fumadocs.dev) and deploys to
+Cloudflare Workers. `cd site && npm run dev`.
+
+**It is a Node/npm package inside a Bun repo, deliberately.** fumapress declares
+`engines.node >= 24`, is a Waku + Vite 8 RSC app, and patches module resolution in ways that
+assume npm-style hoisting. `site/package-lock.json` also tells Cloudflare Workers Builds to
+use npm and Node 24 with no configuration. The CLI package and `bun.lock` are untouched, and
+the root `tsconfig.json` `include` list does not mention `site/`, so `bun run typecheck`
+cannot see it.
+
+**Content lives in `docs/`, not in `site/`.** `dir: '../docs'` in `press.config.tsx`. The
+docs are read on GitHub as often as on the site, and every docs path in this file points at
+the repo root. See the Conventions section for what that costs in exchange.
+
+**It deploys as static assets with no Worker.** `mode: 'static'` prerenders all 24 routes and
+the search index, so there is nothing to run at request time. The adapter nonetheless builds
+a serverless entry and writes `.wrangler/deploy/config.json` redirecting `wrangler deploy` to
+it; `scripts/strip-server-deploy.mjs` removes that redirect after every build. Without it
+`wrangler` silently prefers the generated config — it prints "Using redirected Wrangler
+configuration" — and ships a Worker that does not boot. Only `name`,
+`compatibility_date` and `compatibility_flags` are read from `site/wrangler.jsonc`; a
+`routes` block there would be ignored, so the custom domain is attached out of band.
+
+**Versions are pinned exactly, no carets.** fumapress is 1.x on a Waku beta and a Vite major,
+with a lot of load-bearing compatibility shim. Upgrade deliberately, the way Bunli 0.9.1 is
+handled.
+
+**`mirb.dev/install.sh` is `scripts/install.sh`.** `scripts/sync-installers.mjs` copies it
+into `site/public/` on predev and prebuild; the copies are gitignored. `scripts/install.sh`
+stays the only place either installer is edited.
 
 ---
 

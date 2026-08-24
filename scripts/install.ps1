@@ -10,11 +10,11 @@
   integrity checking off is a flag an attacker can talk a user into typing.
 
 .EXAMPLE
-  irm https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.ps1 | iex
+  irm https://mirb.dev/install.ps1 | iex
 
 .EXAMPLE
   # Passing arguments requires a script block, because `iex` cannot forward parameters.
-  & ([scriptblock]::Create((irm https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.ps1))) -Version 0.2.0
+  & ([scriptblock]::Create((irm https://mirb.dev/install.ps1))) -Version 0.2.0
 
 .EXAMPLE
   # Or use the environment, which survives the plain `irm | iex` form.

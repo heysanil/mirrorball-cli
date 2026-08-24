@@ -73,10 +73,10 @@ exactly as they already do.
 
 ```sh
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh
+curl -fsSL https://mirb.dev/install.sh | sh
 
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.ps1 | iex
+irm https://mirb.dev/install.ps1 | iex
 ```
 
 The installer downloads the release binary for your platform and verifies it against the
@@ -275,7 +275,8 @@ remote host. mirrorball forwards ports you can name, and needs neither.
 
 ## Documentation
 
-Everything lives in [`docs/`](docs/index.md). The pages people open most:
+Full documentation: **[mirb.dev](https://mirb.dev)**. The same pages live in
+[`docs/`](docs/index.md) and render on GitHub. The ones people open most:
 
 | | |
 | --- | --- |
