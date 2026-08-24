@@ -31,6 +31,24 @@ const COMPARISON = {
 export default function Home() {
   return (
     <main className="landing">
+      {/* React 19 hoists these into <head>. Content pages get their metadata from
+          frontmatter; a file-based route has none, so without this the landing page
+          ships with no title at all and shows up as a bare URL in a tab or a search
+          result. */}
+      <title>mirrorball — instant SSH port forwarding</title>
+      <meta
+        name="description"
+        content="One command instead of an ssh -L incantation, and an honest answer to whether anything is actually listening on the other end."
+      />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://mirb.dev/" />
+      <meta property="og:title" content="mirrorball — instant SSH port forwarding" />
+      <meta
+        property="og:description"
+        content="ssh -L binds your local port whether or not the remote service exists. mirrorball probes the far end and tells you which one you are looking at."
+      />
+      <meta name="twitter:card" content="summary" />
+
       {/* ---------------------------------------------------------------- hero */}
       <section className="hero">
         <p className="eyebrow">ssh port forwarding</p>
