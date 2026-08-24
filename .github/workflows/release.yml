@@ -15,6 +15,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      # Cross-compiling needs each target's OpenTUI runtime package present on disk. Those
+      # arrive as platform-gated optional dependencies, so an ordinary `bun install` fetches
+      # only the host's and `bunli build --targets all` then fails with:
+      #   Missing OpenTUI platform runtime packages required for standalone compilation
+      # Installing with the wildcards pulls all of them. Verified by reproducing the failure
+      # locally and fixing it exactly this way.
+      - name: Install with every platform's optional dependencies
+        run: bun install --frozen-lockfile --os '*' --cpu '*'
+
       # Cross-compiles every target in bunli.config.ts, packages each as
       # mirb-<version>-<os>-<arch>.tar.gz (.zip on windows), writes checksums.txt, and
       # uploads the lot to the GitHub Release for this tag.
@@ -27,6 +40,9 @@ jobs:
       - uses: AryaLabsHQ/bunli-releaser@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Idempotent: a re-run, or a tag whose assets were published by hand, should not
+          # fail the release for uploading something that is already there.
+          existing-assets: skip
 
   npm:
     name: Publish to npm
