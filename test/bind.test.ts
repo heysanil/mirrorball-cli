@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 import {
+  assertSshOptionsSafe,
   assertExposureAllowed,
   isExposedAddress,
   isLoopbackAddress,
@@ -104,5 +105,54 @@ describe('normalizeBindAddress', () => {
     for (const a of ['0.0.0.0', '*', '::', '192.168.1.10', '127.evil.com']) {
       expect(isLoopbackAddress(normalizeBindAddress(a))).toBe(false)
     }
+  })
+})
+
+describe('assertSshOptionsSafe', () => {
+  /**
+   * REGRESSION GUARD. ssh accepts `-o Keyword=value` AND `-o "Keyword value"`. An earlier
+   * version split on `=` only, so the whitespace spelling passed straight through and
+   * created a listener mirrorball knew nothing about — absent from `ls`, from the event
+   * stream, and from `stop`. Verified against OpenSSH_10.2p1 that ssh honours both.
+   */
+  test.each([
+    'LocalForward=9999 localhost:9999',
+    'LocalForward 9999 localhost:9999',
+    'localforward 9999 localhost:9999',
+    '  LocalForward   9999 localhost:9999',
+    'RemoteForward=9999 localhost:9999',
+    'RemoteForward 9999 localhost:9999',
+    'DynamicForward=1080',
+    'DynamicForward 1080',
+    'ClearAllForwardings=yes',
+    'ClearAllForwardings yes'
+  ])('refuses %p', (opt) => {
+    expect(() => assertSshOptionsSafe([opt])).toThrow(MirbError)
+  })
+
+  test.each([
+    'StrictHostKeyChecking=no',
+    'ServerAliveInterval 30',
+    'Compression=yes',
+    'ProxyJump=bastion',
+    'IdentitiesOnly yes'
+  ])('passes %p straight through', (opt) => {
+    expect(() => assertSshOptionsSafe([opt])).not.toThrow()
+  })
+
+  test('the refusal names the keyword and points at port arguments', () => {
+    try {
+      assertSshOptionsSafe(['LocalForward 9999 localhost:9999'])
+      throw new Error('should have thrown')
+    } catch (e) {
+      const err = e as MirbError
+      expect(err.code).toBe('USAGE')
+      expect(err.message).toContain('localforward')
+      expect(err.hint).toContain('port arguments')
+    }
+  })
+
+  test('an option that merely mentions a keyword in its value is fine', () => {
+    expect(() => assertSshOptionsSafe(['SetEnv=NOTE=localforward'])).not.toThrow()
   })
 })

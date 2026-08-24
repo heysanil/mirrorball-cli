@@ -5,7 +5,6 @@ Instant SSH port forwarding. One command instead of an `-L` incantation — and,
 
 [![CI](https://img.shields.io/github/actions/workflow/status/heysanil/mirrorball-cli/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/heysanil/mirrorball-cli/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/heysanil/mirrorball-cli?style=flat-square&label=release)](https://github.com/heysanil/mirrorball-cli/releases/latest)
-[![npm](https://img.shields.io/npm/v/mirb?style=flat-square)](https://www.npmjs.com/package/mirb)
 [![License](https://img.shields.io/github/license/heysanil/mirrorball-cli?style=flat-square)](LICENSE)
 
 ---

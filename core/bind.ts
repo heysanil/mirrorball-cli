@@ -115,13 +115,29 @@ const FORWARDING_KEYWORDS = new Set([
  */
 export function assertSshOptionsSafe(options: readonly string[]): void {
   for (const opt of options) {
-    const keyword = opt.split('=')[0]?.trim().toLowerCase() ?? ''
+    const keyword = sshOptionKeyword(opt)
     if (FORWARDING_KEYWORDS.has(keyword)) {
       throw new MirbError(
         'USAGE',
-        `-o ${opt.split('=')[0]} is not allowed`,
+        `-o ${keyword} is not allowed`,
         'mirrorball owns forwarding so it can report it honestly. Use port arguments instead, e.g. mirb <host> 49000:db.internal:5432.'
       )
     }
   }
+}
+
+/**
+ * The keyword from an `-o` argument, in either spelling ssh accepts.
+ *
+ * ssh takes both `LocalForward=9999 localhost:9999` and `LocalForward 9999 localhost:9999`,
+ * and an earlier version of this check only split on `=`. The whitespace form therefore
+ * passed straight through and created a listener mirrorball knew nothing about — the exact
+ * thing the keyword list exists to prevent. Verified against OpenSSH_10.2p1: `ssh -G -o
+ * "LocalForward 49000 localhost:5432"` resolves to a real `localforward` entry.
+ *
+ * Matching the leading identifier covers both, and anything without one cannot name a
+ * keyword at all.
+ */
+function sshOptionKeyword(option: string): string {
+  return /^\s*([A-Za-z]+)/.exec(option)?.[1]?.toLowerCase() ?? ''
 }
