@@ -86,7 +86,7 @@ timeouts. `-N` already makes a pty unlikely; `-T` makes it impossible.
 
 **`-o ExitOnForwardFailure=yes` — a failed forward is a failed session.** This is the
 single most important flag mirrorball sets, and it has [its own entry in Design
-decisions](design-decisions.md#-o-exitonforwardfailureyes-is-mandatory). OpenSSH's default
+decisions](./design-decisions.md#-o-exitonforwardfailureyes-is-mandatory). OpenSSH's default
 is `no`, which means a `-L` that cannot be set up produces a warning on stderr and *nothing
 else*: ssh keeps running, the session looks healthy, and the exit status is `0`. With three
 forwards and one taken port, you get two working tunnels, one that refuses connections, and
@@ -114,7 +114,7 @@ every interactive prompt: key passphrase, password, keyboard-interactive (which 
 2FA arrives), and host-key confirmation. In a detached supervisor those prompts go to a log
 file nobody is reading and ssh waits forever — the session never fails, so nothing retries
 and nothing reports. In an interactive foreground run they are exactly what you want. See
-[Design decisions](design-decisions.md#batchmode-is-conditional-not-always-on).
+[Design decisions](./design-decisions.md#batchmode-is-conditional-not-always-on).
 
 **`-L <bind>:<lport>:<rhost>:<rport>` — one per forward, always with an explicit bind
 address.** Two reasons the bind address is never omitted. First, privacy: the default is
@@ -224,7 +224,7 @@ true, and neither tool involved will say which layer is at fault.
 The only signal mirrorball uses to move a forward from `pending` to `bound` is a TCP connect
 to the local port. ssh's debug output is never consulted for this. The reasons are laid out
 in [Design
-decisions](design-decisions.md#readiness-is-a-tcp-connect-never-parsed-from-ssh--v), but the
+decisions](./design-decisions.md#readiness-is-a-tcp-connect-never-parsed-from-ssh--v), but the
 short version is that the text varies by OpenSSH version and by locale, while a TCP connect
 behaves identically everywhere, and the fact the debug line reports ("a listener is about to
 be attempted") is precisely the fact that tells you least — OpenSSH logs it before the
@@ -420,4 +420,4 @@ In the **background**, mirrorball re-executes itself as a detached `__supervise`
 which does exactly the same work with its output redirected to a log file and its state
 written to a session record. Nothing else changes: same argv builder, same probe, same
 backoff. See [Background sessions](../guides/background-sessions.md) for the commands, and
-[Architecture](architecture.md#where-state-lives) for where the record and the log end up.
+[Architecture](./architecture.md#where-state-lives) for where the record and the log end up.

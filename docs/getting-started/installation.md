@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Every way to install mirrorball — the shell installer, npm, or from source — plus verifying, upgrading, uninstalling, and where files land.
+description: Every way to install mirrorball — the shell installer, a release archive, or from source — plus verifying, upgrading, uninstalling, and where files land.
 sidebar_position: 1
 ---
 
@@ -20,8 +20,8 @@ second `bin` entry under npm — so whichever name you remember is the one that 
 | **An `ssh` client** | Any OpenSSH. mirrorball does not implement SSH — it runs the `ssh` on your `PATH`, which is what makes your `ssh_config`, agent and keys work unchanged. |
 | **macOS, Linux, or Windows** | Prebuilt for `darwin-arm64`, `darwin-x64`, `linux-arm64`, `linux-x64`, `windows-x64`. |
 
-Bun and Node are **not** required to run a released binary. They are only needed if you
-install from source, or via npm (where a small Node shim picks the right binary).
+Bun is **not** required to run a released binary. It is only needed if you build from
+source.
 
 If `ssh` is missing, mirrorball says so with the `NO_SSH` error code rather than failing
 obscurely:
@@ -38,13 +38,13 @@ mirb: hint: Install OpenSSH, or point mirb at one with MIRB_SSH=/path/to/ssh.
 **macOS and Linux:**
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh
+curl -fsSL https://mirb.dev/install.sh | sh
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-irm https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.ps1 | iex
+irm https://mirb.dev/install.ps1 | iex
 ```
 
 The script detects your platform, resolves the latest release, downloads the matching
@@ -79,7 +79,7 @@ The shell installer takes flags or environment variables:
 | | `NO_COLOR` | | Disable coloured output. |
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh \
+curl -fsSL https://mirb.dev/install.sh \
   | sh -s -- --version 0.1.0 --dir /usr/local/bin
 ```
 
@@ -96,11 +96,11 @@ The PowerShell script takes the same ideas as parameters:
 environment:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.ps1))) -Version 0.1.0
+& ([scriptblock]::Create((irm https://mirb.dev/install.ps1))) -Version 0.1.0
 ```
 
 ```powershell
-$env:MIRB_VERSION = '0.1.0'; irm https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.ps1 | iex
+$env:MIRB_VERSION = '0.1.0'; irm https://mirb.dev/install.ps1 | iex
 ```
 
 ### Notes
@@ -212,7 +212,7 @@ whenever stdout is not a terminal.)
 To pin or roll back, pass a version:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh -s -- --version 0.1.0
+curl -fsSL https://mirb.dev/install.sh | sh -s -- --version 0.1.0
 ```
 
 Background sessions are supervised by the `mirb` process that started them, not by the binary
@@ -228,7 +228,6 @@ Remove the binary and its alias:
 
 ```sh
 rm ~/.local/bin/mirb ~/.local/bin/mirrorball   # or wherever --dir put them
-npm uninstall -g mirb                          # if installed from npm
 ```
 
 ```powershell
@@ -270,5 +269,5 @@ common case, not an error.
 
 ## Next
 
-- [Quick start](quick-start.md) — a working tunnel in thirty seconds.
-- [Concepts](concepts.md) — the vocabulary, and the readiness model.
+- [Quick start](./quick-start.md) — a working tunnel in thirty seconds.
+- [Concepts](./concepts.md) — the vocabulary, and the readiness model.

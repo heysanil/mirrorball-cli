@@ -50,7 +50,7 @@ mkdir -p ~/.config/mirb && $EDITOR ~/.config/mirb/config.toml
 ```
 
 Session records and logs live somewhere else entirely — see
-[Environment variables](environment.md) for `$MIRB_STATE_DIR` and the state paths.
+[Environment variables](./environment.md) for `$MIRB_STATE_DIR` and the state paths.
 
 Only `mirb up` reads the config; `ls`, `stop`, and `logs` never open it. A `config.toml` you have
 broken cannot stop you from finding and stopping the sessions you already have running.
@@ -101,7 +101,7 @@ ports = ["8080:80", "5432:db.internal:5432", "3000-3005"]
 
 The full port grammar — remaps, third-host forwards, ranges, paired ranges, and the reason the
 first field is always a port rather than a bind address — is in the
-[CLI reference](cli.md#mirb-up).
+[CLI reference](./cli.md#mirb-up).
 
 ---
 
@@ -191,7 +191,7 @@ form. Rename one of them.
 
 **A profile named `up`, `ls`, `stop`, or `logs` needs the long form.** Those words are claimed by
 argv normalization before profile lookup ever happens, so reach the profile with `mirb up ls`. See
-[How argv is resolved](cli.md#how-argv-is-resolved).
+[How argv is resolved](./cli.md#how-argv-is-resolved).
 
 ### What a profile cannot set
 
@@ -245,6 +245,6 @@ mirb: hint: Known profiles: api, db, demo, ipv6, staging. Or name a port: mirb a
 
 ## See also
 
-- [CLI reference](cli.md) — every command and flag, and the port grammar in full
-- [Environment variables](environment.md) — `MIRB_CONFIG`, `MIRB_STATE_DIR`, and the XDG variables
-- [Exit codes](exit-codes.md) — a config error is exit 2
+- [CLI reference](./cli.md) — every command and flag, and the port grammar in full
+- [Environment variables](./environment.md) — `MIRB_CONFIG`, `MIRB_STATE_DIR`, and the XDG variables
+- [Exit codes](./exit-codes.md) — a config error is exit 2

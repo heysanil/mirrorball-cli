@@ -6,7 +6,7 @@ sidebar_position: 2
 
 # Quick start
 
-You need mirrorball (`mirb`) on your `PATH` ([install it](installation.md)) and a host you
+You need mirrorball (`mirb`) on your `PATH` ([install it](./installation.md)) and a host you
 can already `ssh` into. That second condition is the only one mirrorball adds nothing to: it
 runs the `ssh` binary you already have, so if `ssh myhost` works, everything below works.
 
@@ -82,7 +82,7 @@ perfect. Nothing is listening on `10.0.0.7` at those ports. Go start your server
 will report `ready` the next time it probes.
 
 Telling those two failures apart is the entire reason mirrorball exists. See
-[the three readiness states](concepts.md#the-three-readiness-states) for how the
+[the three readiness states](./concepts.md#the-three-readiness-states) for how the
 distinction is made and where it can be wrong.
 
 ## Leave it running
@@ -212,7 +212,7 @@ still shows you what is happening.
 
 ## Next
 
-- [Concepts](concepts.md) — target, forward, session, profile, and the readiness model in
+- [Concepts](./concepts.md) — target, forward, session, profile, and the readiness model in
   full.
 - [Port syntax](../guides/port-syntax.md) — every accepted form, and every rejected one.
 - [Background sessions](../guides/background-sessions.md) — supervision, reconnects, and

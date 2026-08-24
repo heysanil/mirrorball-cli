@@ -306,7 +306,7 @@ mirb logs ci-db --format json | jq -r '.data.lines[]'
   first-time host key or a 2FA challenge fails immediately with a classified error instead of
   hanging on a prompt nobody can answer. A hang is the most expensive failure a tool has. It
   also means the key must already be in an agent; see
-  [Troubleshooting](troubleshooting.md#authentication-in-the-background).
+  [Troubleshooting](./troubleshooting.md#authentication-in-the-background).
 - **A refusal is an error, never a prompt.** Binding beyond loopback requires `--expose` and is
   rejected with exit `2` otherwise, rather than asking for confirmation, so mirrorball behaves
   identically for a human and for a program.
@@ -326,6 +326,6 @@ mirb logs ci-db --format json | jq -r '.data.lines[]'
 
 - [JSON output](../reference/json-output.md) — every field of every envelope and event.
 - [Exit codes](../reference/exit-codes.md) — the complete mapping.
-- [Troubleshooting](troubleshooting.md) — every error string mirrorball produces, and what to do.
-- [Background sessions](background-sessions.md) — the `ls`/`stop`/`logs` workflow in full.
+- [Troubleshooting](./troubleshooting.md) — every error string mirrorball produces, and what to do.
+- [Background sessions](./background-sessions.md) — the `ls`/`stop`/`logs` workflow in full.
 - [Environment variables](../reference/environment.md) — `MIRB_STATE_DIR`, `MIRB_CONFIG`, `MIRB_SSH`.

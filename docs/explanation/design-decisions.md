@@ -10,7 +10,7 @@ Each entry is a decision, the reasoning behind it, and — the part that usually
 what the decision gave up. A trade-off recorded only as its upside is not a trade-off, and it
 leaves the next person unable to tell whether the constraint still holds.
 
-For the mechanics these decisions produced, see [How it works](how-it-works.md).
+For the mechanics these decisions produced, see [How it works](./how-it-works.md).
 
 ---
 
@@ -51,7 +51,6 @@ tunnels" is not a real cost.
 
 ---
 
-<a id="readiness-is-observed-not-parsed"></a>
 
 ## Readiness is a TCP connect, never parsed from `ssh -v`
 
@@ -111,7 +110,6 @@ identity, so an unrelated client's failure inside the same window can be misattr
 
 ---
 
-<a id="exitonforwardfailureyes-is-mandatory"></a>
 
 ## `-o ExitOnForwardFailure=yes` is mandatory
 
@@ -151,7 +149,6 @@ pass-through; this is the one keyword where mirrorball overrules you.
 
 ---
 
-<a id="batchmode-is-conditional-not-global"></a>
 
 ## BatchMode is conditional, not always on
 
@@ -358,5 +355,5 @@ environment surface. See [Environment](../reference/environment.md).
 
 ## Related
 
-- [How it works](how-it-works.md) — the argv, the readiness model, reconnection.
-- [Architecture](architecture.md) — the layers, the state machine, state on disk.
+- [How it works](./how-it-works.md) — the argv, the readiness model, reconnection.
+- [Architecture](./architecture.md) — the layers, the state machine, state on disk.

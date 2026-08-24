@@ -34,7 +34,7 @@ mirb: error: $MIRB_SSH points at '/nope/ssh', which is not an executable
 mirb: hint: Unset MIRB_SSH to use the ssh on your PATH.
 ```
 
-That is a `NO_SSH` failure, [exit 3](exit-codes.md). A value that is empty or only whitespace
+That is a `NO_SSH` failure, [exit 3](./exit-codes.md). A value that is empty or only whitespace
 counts as unset. A bare name (`ssh-9.9`) is looked up on `PATH` like any command.
 
 `--ssh-path` is the same affordance and takes the same route, and wins when both are given.
@@ -72,7 +72,7 @@ Names the file, not its directory — it exists so a throwaway config needs no X
 | Windows | `%APPDATA%\mirb\config.toml`, else `~\AppData\Roaming\mirb\config.toml` |
 
 A missing file is not an error — mirrorball is fully usable without one. A file that exists
-but is malformed is a `CONFIG` failure, [exit 2](exit-codes.md).
+but is malformed is a `CONFIG` failure, [exit 2](./exit-codes.md).
 
 ```bash
 MIRB_CONFIG=./ci-profiles.toml mirb staging
@@ -152,7 +152,7 @@ afterwards.
 
 ```bash
 MIRB_VERSION=0.2.0 MIRB_INSTALL_DIR=/usr/local/bin \
-  curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh
+  curl -fsSL https://mirb.dev/install.sh | sh
 ```
 
 ## Repository tooling
@@ -163,6 +163,6 @@ fake ssh is driven by `FAKE_SSH_*` variables, documented alongside it in
 
 ## See also
 
-- [Configuration](configuration.md) — what goes in the file `MIRB_CONFIG` points at
-- [CLI reference](cli.md) — the flags that override these
-- [Exit codes](exit-codes.md) — `MIRB_SSH` pointing at nothing is exit 3
+- [Configuration](./configuration.md) — what goes in the file `MIRB_CONFIG` points at
+- [CLI reference](./cli.md) — the flags that override these
+- [Exit codes](./exit-codes.md) — `MIRB_SSH` pointing at nothing is exit 3

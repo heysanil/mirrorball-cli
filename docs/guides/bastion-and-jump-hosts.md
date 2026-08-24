@@ -67,7 +67,7 @@ Two consequences follow from that, and both explain most of the confusion on thi
 
 `localhost` is the default for that field, so `mirb bastion 15432:5432` means "the bastion's
 own port 5432". `localhost` there is the *bastion's* localhost. See
-[Port syntax](port-syntax.md) for the full grammar.
+[Port syntax](./port-syntax.md) for the full grammar.
 
 ---
 
@@ -113,7 +113,7 @@ $ mirb -J edge.example.com,bastion.internal app-01.internal 3000
 
 Each hop is a separate SSH connection with its own configuration. Per-hop users, ports, and
 keys belong in `ssh_config` `Host` blocks rather than on the mirrorball command line — see
-[SSH configuration](ssh-configuration.md).
+[SSH configuration](./ssh-configuration.md).
 
 ---
 
@@ -198,7 +198,7 @@ $ mirb pg
 ```
 
 `jump`, `identity`, and `bind` are profile fields too, so a `-J` chain can live in the file
-as well. See [Profiles](profiles.md).
+as well. See [Profiles](./profiles.md).
 
 ---
 
@@ -292,10 +292,10 @@ the probe is a real connection, one per forward, every time the session comes up
 
 ## Related
 
-- [Port syntax](port-syntax.md) — the full grammar for the third field, ranges, and IPv6.
-- [SSH configuration](ssh-configuration.md) — `ProxyJump` in `ssh_config`, identities per
+- [Port syntax](./port-syntax.md) — the full grammar for the third field, ranges, and IPv6.
+- [SSH configuration](./ssh-configuration.md) — `ProxyJump` in `ssh_config`, identities per
   hop, and running the generated ssh command by hand.
-- [Background sessions](background-sessions.md) — keeping a bastion tunnel up all day.
-- [Profiles](profiles.md) — putting a jump chain in a file instead of your shell history.
+- [Background sessions](./background-sessions.md) — keeping a bastion tunnel up all day.
+- [Profiles](./profiles.md) — putting a jump chain in a file instead of your shell history.
 - [How it works](../explanation/how-it-works.md) — the argv, the probe, and the readiness
   model in full.

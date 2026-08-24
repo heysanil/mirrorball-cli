@@ -67,7 +67,7 @@ That middle state is the product. It is the difference between "debug your ssh s
 Install it:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh
+curl -fsSL https://mirb.dev/install.sh | sh
 ```
 
 Forward a port:
@@ -161,46 +161,46 @@ $ mirb --json 10.0.0.7 3000
 
 ### Getting started
 
-- [Installation](getting-started/installation.md) — every channel, plus verifying, upgrading
+- [Installation](./getting-started/installation.md) — every channel, plus verifying, upgrading
   and uninstalling.
-- [Quick start](getting-started/quick-start.md) — a working tunnel in thirty seconds, then a
+- [Quick start](./getting-started/quick-start.md) — a working tunnel in thirty seconds, then a
   few steps past it.
-- [Concepts](getting-started/concepts.md) — target, forward, session, profile, and the
+- [Concepts](./getting-started/concepts.md) — target, forward, session, profile, and the
   readiness model in full.
 
 ### Guides
 
-- [Port syntax](guides/port-syntax.md) — every accepted argument form, and every rejected one.
-- [Profiles](guides/profiles.md) — naming the things you forward every day.
-- [Background sessions](guides/background-sessions.md) — detaching, supervision, reconnects.
-- [Bastions and jump hosts](guides/bastion-and-jump-hosts.md) — reaching what you cannot
+- [Port syntax](./guides/port-syntax.md) — every accepted argument form, and every rejected one.
+- [Profiles](./guides/profiles.md) — naming the things you forward every day.
+- [Background sessions](./guides/background-sessions.md) — detaching, supervision, reconnects.
+- [Bastions and jump hosts](./guides/bastion-and-jump-hosts.md) — reaching what you cannot
   reach directly.
-- [SSH configuration](guides/ssh-configuration.md) — how mirrorball cooperates with
+- [SSH configuration](./guides/ssh-configuration.md) — how mirrorball cooperates with
   `ssh_config`.
-- [Automation and agents](guides/automation-and-agents.md) — driving mirrorball from scripts
+- [Automation and agents](./guides/automation-and-agents.md) — driving mirrorball from scripts
   and from tools that are not people.
-- [Troubleshooting](guides/troubleshooting.md) — what each failure means and what to do.
+- [Troubleshooting](./guides/troubleshooting.md) — what each failure means and what to do.
 
 ### Reference
 
-- [CLI](reference/cli.md) — every command and flag.
-- [Configuration](reference/configuration.md) — the `config.toml` schema.
-- [JSON output](reference/json-output.md) — the event stream and the envelope.
-- [Exit codes](reference/exit-codes.md) — the stable status codes, for scripts.
-- [Environment](reference/environment.md) — every variable mirrorball reads.
+- [CLI](./reference/cli.md) — every command and flag.
+- [Configuration](./reference/configuration.md) — the `config.toml` schema.
+- [JSON output](./reference/json-output.md) — the event stream and the envelope.
+- [Exit codes](./reference/exit-codes.md) — the stable status codes, for scripts.
+- [Environment](./reference/environment.md) — every variable mirrorball reads.
 
 ### Explanation
 
-- [How it works](explanation/how-it-works.md) — the exact ssh command mirrorball builds, and
+- [How it works](./explanation/how-it-works.md) — the exact ssh command mirrorball builds, and
   why each flag is there.
-- [Architecture](explanation/architecture.md) — the module layers and the state on disk.
-- [Design decisions](explanation/design-decisions.md) — the non-obvious calls, and what each
+- [Architecture](./explanation/architecture.md) — the module layers and the state on disk.
+- [Design decisions](./explanation/design-decisions.md) — the non-obvious calls, and what each
   one cost.
 
 ### Contributing
 
-- [Development](contributing/development.md) · [Testing](contributing/testing.md) ·
-  [Releasing](contributing/releasing.md)
+- [Development](./contributing/development.md) · [Testing](./contributing/testing.md) ·
+  [Releasing](./contributing/releasing.md)
 
 ---
 

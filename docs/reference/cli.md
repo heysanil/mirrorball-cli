@@ -131,7 +131,7 @@ Two deliberate exceptions:
   a pipe wants the log text, and turning `mirb logs x | grep` into JSON would break it.
 
 Errors never go to stdout, in any mode. They go to stderr in this shape, and the process exits
-with the code for that failure (see [exit codes](exit-codes.md)):
+with the code for that failure (see [exit codes](./exit-codes.md)):
 
 ```
 mirb: error: 'nosuchprofile' is not a known profile, and no ports were given
@@ -177,7 +177,7 @@ proven up.
 
 **`<target>`** — the first positional. It is resolved as a **profile name first**, then as an ssh
 destination. A profile named `prod` wins over a host named `prod`, because the profile is the thing
-you configured on purpose. See [Configuration](configuration.md).
+you configured on purpose. See [Configuration](./configuration.md).
 
 As a destination, these forms parse:
 
@@ -335,7 +335,7 @@ A backgrounded start prints the session, its forwards, and how to stop it:
 ```
 
 `forward.error` carries `{ localPort, code, message }`, where `code` is the same
-[error code](exit-codes.md) the exit status is derived from.
+[error code](./exit-codes.md) the exit status is derived from.
 
 `mirb up --background` is different: it is a request with an answer, so it prints one envelope.
 
@@ -557,14 +557,14 @@ its plan-file format is not a stable interface. See
 `0` on success, `2` for a usage or config error, `3` for ssh failures, `4` for a local port
 conflict, `5` when the tunnel is up but the remote service refused, `130` for Ctrl-C, `1` for
 everything else. The full table, with the error code each one comes from, is in
-[Exit codes](exit-codes.md).
+[Exit codes](./exit-codes.md).
 
 ## See also
 
-- [Configuration](configuration.md) — named profiles in `config.toml`
-- [Environment variables](environment.md) — `MIRB_CONFIG`, `MIRB_STATE_DIR`, `MIRB_SSH`,
+- [Configuration](./configuration.md) — named profiles in `config.toml`
+- [Environment variables](./environment.md) — `MIRB_CONFIG`, `MIRB_STATE_DIR`, `MIRB_SSH`,
   `MIRB_ASCII`, `NO_COLOR`, `FORCE_COLOR`, and the XDG variables behind the paths above
-- [JSON output](json-output.md) — the envelope and the full NDJSON event catalogue
-- [Exit codes](exit-codes.md)
+- [JSON output](./json-output.md) — the envelope and the full NDJSON event catalogue
+- [Exit codes](./exit-codes.md)
 - [How it works](../explanation/how-it-works.md) — the ssh command mirrorball builds, and how it
   decides a tunnel is actually up

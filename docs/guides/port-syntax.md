@@ -132,7 +132,7 @@ rather than silently unwrapped.
 
 | Input | Message |
 | --- | --- |
-| `8080:::1:5432` | `'8080:::1:5432' has 5 colon-separated parts; expected at most 3`<br/>hint: `IPv6 literals must be bracketed: 8080:[::1]:5432.` |
+| `8080:::1:5432` | `'8080:::1:5432' has 5 colon-separated parts; expected at most 3` — hint: `IPv6 literals must be bracketed: 8080:[::1]:5432.` |
 | `8080:[::1:5432` | `unbalanced '[' in '8080:[::1:5432'` |
 | `8080:[::1]]:5432` | `unbalanced ']' in '8080:[::1]]:5432'` |
 | `8080:host]:5432` | `unbalanced ']' in '8080:host]:5432'` |
@@ -345,7 +345,7 @@ is a whitelist of loopback spellings rather than a blacklist of dangerous ones, 
 closed: `127.evil.com` is a hostname whose owner chooses where it resolves, and a prefix
 test would have published your forward to the internet without a word.
 
-:::danger Binding beyond loopback publishes the forward to your network
+:::warn[Binding beyond loopback publishes the forward to your network]
 
 `--bind 0.0.0.0` makes every forward in the session reachable by **every machine that can
 reach yours**. A staging database, an admin panel, a dev server with no auth — all of it,

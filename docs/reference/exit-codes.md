@@ -28,7 +28,7 @@ Anything outside this table came from the runtime, not from mirrorball.
 
 Every failure inside mirrorball is a `MirbError` carrying a `MirbErrorCode`. That code is what
 decides the exit status, and it is also what appears in a
-[`forward.error` event](json-output.md#forwarderror).
+[`forward.error` event](./json-output.md#forwarderror).
 
 | `MirbErrorCode` | Exit | Meaning |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ up with a channel-open failure as its last word.
 **A foreground `mirb up` does not exit 0.** It runs until you stop it (130) or until it gives
 up (a class code). There is no third ending. Scripts that want a success code should use
 `--background`, which exits 0 once the tunnel is proven, or watch for
-[`session.ready`](json-output.md#sessionready) on the event stream.
+[`session.ready`](./json-output.md#sessionready) on the event stream.
 
 **SIGTERM also exits 130.** mirrorball treats any requested stop as the same event, whether
 it arrived as Ctrl-C or as a signal from a process manager. This is deliberately not the
@@ -97,6 +97,6 @@ covered by tests, so `stop` and `up` cannot disagree about what a busy port is w
 
 ## See also
 
-- [JSON output](json-output.md) — the envelope, the event stream, and where errors are written
-- [CLI reference](cli.md) — which command can produce which failure
-- [Configuration](configuration.md) — a malformed `config.toml` is exit 2
+- [JSON output](./json-output.md) — the envelope, the event stream, and where errors are written
+- [CLI reference](./cli.md) — which command can produce which failure
+- [Configuration](./configuration.md) — a malformed `config.toml` is exit 2

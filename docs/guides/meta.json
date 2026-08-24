@@ -1,0 +1,13 @@
+{
+  "title": "Guides",
+  "pages": [
+    "port-syntax",
+    "profiles",
+    "background-sessions",
+    "bastion-and-jump-hosts",
+    "ssh-configuration",
+    "automation-and-agents",
+    "troubleshooting",
+    "..."
+  ]
+}

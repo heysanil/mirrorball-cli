@@ -12,10 +12,10 @@ bun test test/target.test.ts    # one file
 bun test -t "IPv6"              # one describe/test name
 ```
 
-The whole suite runs offline, on a laptop with no ssh agent, in CI with no ssh server,
-in under a couple of seconds. Nothing in `test/` may connect to a real host, and nothing
-may depend on a real `ssh` binary being installed. That constraint is why the fake-ssh
-harness exists.
+The whole suite runs offline, on a laptop with no ssh agent, in CI with no ssh server:
+402 tests across 12 files in about 17 seconds. Nothing in `test/` may connect to a real
+host, and nothing may depend on a real `ssh` binary being installed. That constraint is
+why the fake-ssh harness exists.
 
 ## How the suite is organised
 
@@ -24,9 +24,15 @@ test/
 ├── target.test.ts       ── core/target.ts
 ├── portspec.test.ts     ── core/portspec.ts
 ├── ports.test.ts        ── core/ports.ts
+├── bind.test.ts         ── core/bind.ts
 ├── ssh.test.ts          ── core/ssh.ts
+├── session.test.ts      ── core/session.ts
 ├── state.test.ts        ── core/state.ts
 ├── config.test.ts       ── core/config.ts
+├── errors.test.ts       ── core/errors.ts
+├── ui.test.ts           ── ui/
+├── commands.test.ts     ── commands/, driven through @bunli/test
+├── invariants.test.ts   the security properties; see below
 └── fixtures/
     └── fake-ssh.ts      the ssh impersonator every ssh-touching test runs against
 ```
@@ -48,6 +54,11 @@ real ssh.
 **Command tests** drive a whole command through `@bunli/test`, asserting on what the
 user sees: rendered output, the `--format json` envelope, and the process exit code.
 Keep these few and end-to-end-ish; they're the slowest and the most brittle.
+
+`invariants.test.ts` sits outside that ordering. It holds the security properties — that
+every emitted `-L` carries an explicit bind address, and that mirrorball's `-o` options
+precede the user's. If you are changing argv construction or bind handling, that is the
+file that will stop you.
 
 ## Conventions
 

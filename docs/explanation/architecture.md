@@ -10,8 +10,8 @@ mirrorball is small enough that its architecture is mostly a set of rules about 
 on what. This page describes those rules, the path a command takes through them, and the state
 that outlives the process.
 
-For the mechanics, see [How it works](how-it-works.md); for the reasoning behind the boundaries,
-[Design decisions](design-decisions.md).
+For the mechanics, see [How it works](./how-it-works.md); for the reasoning behind the boundaries,
+[Design decisions](./design-decisions.md).
 
 ---
 
@@ -192,7 +192,7 @@ stateDiagram-v2
 
 `bound` is not a synonym for working. A successful connect proves only that your local ssh is
 holding the listener — see
-[why a connect cannot establish more than bound](how-it-works.md#why-a-connect-cannot-establish-more-than-bound).
+[why a connect cannot establish more than bound](./how-it-works.md#why-a-connect-cannot-establish-more-than-bound).
 
 ---
 
@@ -293,6 +293,6 @@ it happens rather than waiting for a process that is designed never to end on it
 
 ## Related
 
-- [How it works](how-it-works.md) — the ssh command, the readiness model, reconnection.
-- [Design decisions](design-decisions.md) — the trade-offs behind this structure.
+- [How it works](./how-it-works.md) — the ssh command, the readiness model, reconnection.
+- [Design decisions](./design-decisions.md) — the trade-offs behind this structure.
 - [Testing](../contributing/testing.md) — how the seams above are exercised.

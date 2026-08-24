@@ -205,7 +205,7 @@ mirb stop fosk --json
 
 `mirb stop --all` with nothing running is not an error: `stopped` is `[]` and the exit code is
 0. Naming a session that does not exist *is* an error — see
-[exit codes](exit-codes.md).
+[exit codes](./exit-codes.md).
 
 ### `mirb logs`
 
@@ -318,7 +318,7 @@ working. A session with any of these ends up `degraded` rather than `failed`.
 | Field | Type | Notes |
 | --- | --- | --- |
 | `localPort` | `number` | Identifies the forward. |
-| `code` | `string` | A [`MirbErrorCode`](exit-codes.md#error-codes). In practice `REMOTE_REFUSED` (the probe was refused) or `SSH_CONNECT` (the local port never started accepting). |
+| `code` | `string` | A [`MirbErrorCode`](./exit-codes.md#error-codes). In practice `REMOTE_REFUSED` (the probe was refused) or `SSH_CONNECT` (the local port never started accepting). |
 | `message` | `string` | The same sentence that lands in `forwards[].detail`. |
 
 ```json
@@ -372,7 +372,7 @@ The ssh process is gone. On a retryable failure this is followed by
 ```
 
 `code` here is ssh's, not mirrorball's. The process exit code is a separate, much smaller
-vocabulary — see [exit codes](exit-codes.md).
+vocabulary — see [exit codes](./exit-codes.md).
 
 ### A complete stream
 
@@ -427,7 +427,7 @@ mirb: hint: Something else is listening there. Free it, pick another local port,
 
 Stdout stays clean, so a consumer's `JSON.parse` never has to survive a sentence that was
 meant for a person. Branch on the exit code, and read stderr for the explanation. The full
-mapping is in [exit codes](exit-codes.md).
+mapping is in [exit codes](./exit-codes.md).
 
 The one exception belongs to bunli, not to mirrorball: an option that fails validation
 before the handler runs produces a structured error document, also on stderr, and exits 1.
@@ -474,6 +474,6 @@ One line is always exactly one record.
 
 ## See also
 
-- [CLI reference](cli.md) — the flags that select each output mode
-- [Exit codes](exit-codes.md) — what mirrorball returns when it fails
-- [Environment variables](environment.md) — `NO_COLOR`, `MIRB_STATE_DIR`, and the rest
+- [CLI reference](./cli.md) — the flags that select each output mode
+- [Exit codes](./exit-codes.md) — what mirrorball returns when it fails
+- [Environment variables](./environment.md) — `NO_COLOR`, `MIRB_STATE_DIR`, and the rest

@@ -114,7 +114,7 @@ needlessly hard.
 2. Confirm **six** assets on the release: five archives plus `checksums.txt`.
 3. Verify the shell installer against the new release:
    ```sh
-   curl -fsSL https://raw.githubusercontent.com/heysanil/mirrorball-cli/main/scripts/install.sh | sh
+   curl -fsSL https://mirb.dev/install.sh | sh
    ```
    Then check that both names landed: `mirb --version` and `mirrorball --version`, the
    second through the symlink the installer writes next to the binary.

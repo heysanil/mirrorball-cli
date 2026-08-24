@@ -40,10 +40,10 @@ $ ssh -N -T \
 | `-o ServerAliveInterval=15`, `-o ServerAliveCountMax=3` | Always | A dead link surfaces in about 45 seconds instead of hanging. |
 | `-o ConnectTimeout=<n>` | `--timeout`, default 10 | Seconds. |
 | `-o BatchMode=yes` | `--background`, or a non-TTY stdin | See [below](#batchmode-the-one-thing-mirrorball-decides-for-you). |
-| `-L <bind>:<local>:<host>:<port>` | One per forward | The bind address is always explicit. See [Port syntax](port-syntax.md). |
+| `-L <bind>:<local>:<host>:<port>` | One per forward | The bind address is always explicit. See [Port syntax](./port-syntax.md). |
 | `-p <n>` | `--port`/`-P`, or `host:2222` | Absent unless you asked; otherwise ssh's own default applies. |
 | `-i <path>` | `--identity`/`-i`, or a profile's `identity` | Absent unless you asked. |
-| `-J <spec>` | `--jump`/`-J`, or a profile's `jump` | Passed through verbatim, commas and all. See [Bastions and jump hosts](bastion-and-jump-hosts.md). |
+| `-J <spec>` | `--jump`/`-J`, or a profile's `jump` | Passed through verbatim, commas and all. See [Bastions and jump hosts](./bastion-and-jump-hosts.md). |
 | `-o <k=v>` | `--ssh-option`/`-o`, repeatable | Yours, appended last. |
 | `user@host` | The target | The port is *not* here — it travels as `-p`. |
 
@@ -152,7 +152,7 @@ Two things `-i` does *not* do, both of which are ssh semantics rather than mirro
 - **It does not apply per hop.** Each hop of a `-J` chain is a separate SSH connection with
   its own configuration. Per-hop keys belong in `ssh_config` `Host` blocks.
 
-A profile can carry `identity` so you never type it. See [Profiles](profiles.md).
+A profile can carry `identity` so you never type it. See [Profiles](./profiles.md).
 
 ---
 
@@ -309,20 +309,20 @@ A short checklist, in the order that isolates fastest:
    mirrorball is only the messenger.
 2. Leave that ssh running and connect to the local port: `nc -vz 127.0.0.1 15432`. If the
    port refuses, the forward is not being set up. If it accepts and then drops, the far end
-   is refusing the channel — see [Bastions and jump hosts](bastion-and-jump-hosts.md).
+   is refusing the channel — see [Bastions and jump hosts](./bastion-and-jump-hosts.md).
 3. Compare with `mirb <same host> <same ports>` in the foreground. A difference between the
    two is worth a bug report; attach the `sshArgv`.
 
-See [Troubleshooting](troubleshooting.md) for failures grouped by symptom.
+See [Troubleshooting](./troubleshooting.md) for failures grouped by symptom.
 
 ---
 
 ## Related
 
-- [Bastions and jump hosts](bastion-and-jump-hosts.md) — `-J`, `ProxyJump`, and the third
+- [Bastions and jump hosts](./bastion-and-jump-hosts.md) — `-J`, `ProxyJump`, and the third
   field of a port spec.
-- [Port syntax](port-syntax.md) — the grammar `-L` specs are built from.
-- [Background sessions](background-sessions.md) — where `BatchMode` starts to matter.
+- [Port syntax](./port-syntax.md) — the grammar `-L` specs are built from.
+- [Background sessions](./background-sessions.md) — where `BatchMode` starts to matter.
 - [CLI reference](../reference/cli.md) — every flag, with defaults.
 - [Environment](../reference/environment.md) — `MIRB_SSH`, `MIRB_CONFIG`, `MIRB_STATE_DIR`.
 - [How it works](../explanation/how-it-works.md) — why each fixed flag is there.

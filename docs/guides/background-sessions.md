@@ -44,7 +44,7 @@ remote service has answered a probe.
 That matters most for the caller who is not a human. A flag that returned early would hand
 a script a set of ports that are not up yet, and the first thing that script does is
 connect to them. See
-[Automation and agents](automation-and-agents.md#the-guarantee---background-gives-you)
+[Automation and agents](./automation-and-agents.md#the-guarantee---background-gives-you)
 for what a program can rely on.
 
 The wait is bounded. The detached child gives ssh `max(10s, --timeout + 10s)` to get its
@@ -70,7 +70,7 @@ $ echo $?
 
 Nothing is left behind — no record, no log, nothing in `mirb ls`. A session that never
 existed should not appear in a listing of sessions that do. If the message is not enough on
-its own, [Troubleshooting](troubleshooting.md) is keyed to the exact text.
+its own, [Troubleshooting](./troubleshooting.md) is keyed to the exact text.
 
 ### `--background` implies `BatchMode=yes`
 
@@ -81,7 +81,7 @@ no stdin, and an ssh that *would* have prompted fails immediately instead.
 
 In practice: load the key into your agent (`ssh-add`) and accept the host key once in the
 foreground before you background anything. See
-[SSH configuration](ssh-configuration.md#batchmode-the-one-thing-mirrorball-decides-for-you).
+[SSH configuration](./ssh-configuration.md#batchmode-the-one-thing-mirrorball-decides-for-you).
 
 ### What "detached" actually means
 
@@ -220,7 +220,7 @@ Two things the log is **not**:
   it to classify a failure; what reaches the file is mirrorball's own report — the `error:`
   and `hint:` lines you would have seen on the terminal. If you need OpenSSH's own output,
   run the ssh command yourself: see
-  [Debugging by hand](ssh-configuration.md#debugging-by-running-the-ssh-command-yourself).
+  [Debugging by hand](./ssh-configuration.md#debugging-by-running-the-ssh-command-yourself).
 - It is not durable. The log is deleted with the record when the session ends. Copy
   anything you want to keep before you `stop`.
 
@@ -389,13 +389,13 @@ here. See [Environment](../reference/environment.md).
 
 ## Related
 
-- [SSH configuration](ssh-configuration.md) — what mirrorball hands to ssh, and how to run
+- [SSH configuration](./ssh-configuration.md) — what mirrorball hands to ssh, and how to run
   that command yourself.
-- [Bastions and jump hosts](bastion-and-jump-hosts.md) — reaching a service that is not on
+- [Bastions and jump hosts](./bastion-and-jump-hosts.md) — reaching a service that is not on
   the host you log into.
-- [Profiles](profiles.md) — turn a daily target into `mirb staging`.
-- [Automation and agents](automation-and-agents.md) — the JSON envelope and the event stream.
-- [Troubleshooting](troubleshooting.md) — failures grouped by the message mirrorball printed.
+- [Profiles](./profiles.md) — turn a daily target into `mirb staging`.
+- [Automation and agents](./automation-and-agents.md) — the JSON envelope and the event stream.
+- [Troubleshooting](./troubleshooting.md) — failures grouped by the message mirrorball printed.
 - [CLI reference](../reference/cli.md) — every flag, with defaults.
 - [How it works](../explanation/how-it-works.md) — the readiness model and the backoff.
 - [Architecture](../explanation/architecture.md#where-state-lives) — the record format and

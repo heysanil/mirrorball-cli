@@ -286,7 +286,7 @@ as stopped and swept on the next `mirb ls`; there is nothing to clean up by hand
 
 ## Next
 
-- [Quick start](quick-start.md) — put this vocabulary to work.
+- [Quick start](./quick-start.md) — put this vocabulary to work.
 - [How it works](../explanation/how-it-works.md) — the exact ssh command mirrorball builds,
   and why each flag is there.
 - [Design decisions](../explanation/design-decisions.md) — the calls behind the model above,

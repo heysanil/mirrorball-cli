@@ -86,7 +86,7 @@ mirb 10.0.0.7 3000 --auto-port       # walk upward to the next free port
 
 `--auto-port` searches the next 100 ports upward, and the port it settles on appears in the
 `session.start` event and in `mirb ls` — so a script reads where it landed instead of guessing.
-See [Automation](automation-and-agents.md#query-mirb-ls-with-jq).
+See [Automation](./automation-and-agents.md#query-mirb-ls-with-jq).
 
 A subtlety worth knowing: the check is a real bind attempt, not a scan, so it agrees with the
 kernel. It is still about *error quality*, not a lock — a port free at check time can be taken
@@ -113,7 +113,7 @@ mirb 10.0.0.7 8443:443
 
 **`--auto-port` deliberately does not rescue this.** Shifting past the privileged range would
 hand you port 1024 in place of port 80, which bears no relation to what you asked for. See
-[Port syntax](port-syntax.md) for the full grammar.
+[Port syntax](./port-syntax.md) for the full grammar.
 
 If you genuinely need a privileged local port, run mirrorball under whatever mechanism you
 would use for any other privileged listener. mirrorball does not elevate itself.
@@ -372,7 +372,7 @@ The common causes, in order:
 2. **The service listens on the remote host's own loopback, and you forwarded to a third host.**
    `mirb 10.0.0.7 5432:db.internal:5432` asks the remote sshd to connect onward to
    `db.internal`; if the database only listens on `db.internal`'s loopback, that connection is
-   refused. See [Port syntax](port-syntax.md).
+   refused. See [Port syntax](./port-syntax.md).
 3. **The service is in a container** whose port is not published to the host's network namespace.
 4. **A host firewall on the remote side** blocks the sshd → service connection.
 
@@ -665,7 +665,7 @@ for why `ExitOnForwardFailure=yes` is not negotiable.
 ## See also
 
 - [Exit codes](../reference/exit-codes.md) — the complete code-to-meaning mapping.
-- [Automation and agents](automation-and-agents.md) — detecting all of this from a script.
-- [Background sessions](background-sessions.md) — `ls`, `stop`, `logs` in full.
-- [Port syntax](port-syntax.md) — the argument grammar, including ranges and third-host forwards.
+- [Automation and agents](./automation-and-agents.md) — detecting all of this from a script.
+- [Background sessions](./background-sessions.md) — `ls`, `stop`, `logs` in full.
+- [Port syntax](./port-syntax.md) — the argument grammar, including ranges and third-host forwards.
 - [How it works](../explanation/how-it-works.md) — what mirrorball asks ssh to do, and how readiness is decided.
