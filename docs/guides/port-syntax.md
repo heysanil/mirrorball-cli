@@ -249,8 +249,9 @@ $ mirb example.test 1000-1256
 mirb: error: range 1000-1256 in '1000-1256' spans 257 ports; mirb forwards at most 256 at once
 ```
 
-The cap is **per range argument, not per command**. `mirb host 1000-1255 2000-2255` parses
-to 512 forwards and is accepted. The cap exists to catch a nonsense range, not to police a
+The cap is **global, not per range argument**. `mirb host 1000-1255 2000-2255` is two
+legal ranges totalling 512 forwards, and is refused: the limit bounds the argv and the
+socket count handed to ssh, and neither cares how you spelled it. The cap exists to catch a nonsense range, not to police a
 total; the practical ceiling on a real invocation is your file-descriptor limit and the
 `MaxSessions` of the remote sshd.
 
