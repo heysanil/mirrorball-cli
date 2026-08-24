@@ -37,9 +37,9 @@ Initial release.
 - Typed, documented exit codes (`0`/`2`/`3`/`4`/`5`/`130`) and error codes on every
   failure, so callers can branch instead of grepping messages.
 - Prebuilt standalone binaries for darwin-arm64, darwin-x64, linux-arm64,
-  linux-x64 and windows-x64, published as platform packages on npm. Both the installer
-  and the npm package put `mirb` on your PATH with `mirrorball` alongside it as an alias,
-  so either name works.
+  linux-x64 and windows-x64, published on GitHub Releases alongside a `checksums.txt`
+  the install script verifies against. The installer puts `mirb` on your PATH with
+  `mirrorball` beside it as an alias, so either name works.
 - `--auto-port`, which takes the next free local port instead of failing when the
   requested one is busy, and a pre-flight bind check that names the process holding
   a port rather than surfacing ssh's opaque bind error.
