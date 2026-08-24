@@ -117,59 +117,15 @@ $env:MIRB_VERSION = '0.1.0'; irm https://raw.githubusercontent.com/heysanil/mirr
 
 ---
 
-## npm, bun, or one-shot
+## Is there an npm package?
 
-The package is **`mirb-cli`**; the command it installs is **`mirb`**. They differ because
-npm refused the bare name `mirb` as too similar to existing packages — a registry-side check
-on new names, unrelated to whether the name is free. The same split shows up in
-`create-react-app` and `@angular/cli`.
+Not currently. npm rejected both candidate names — `mirb` and then `mirb-cli` — under its
+similarity check on new package names, which compares against existing packages
+(`mitt`, `mime`, `mri`, `sirv-cli`) and is unrelated to whether a name is free.
 
-```sh
-npm install -g mirb-cli
-bun add -g mirb-cli
-pnpm add -g mirb-cli
-yarn global add mirb-cli
-```
-
-That single package links both commands, so `mirb` and `mirrorball` are equally installed.
-
-Or without installing anything:
-
-```sh
-bunx mirb-cli 10.0.0.7 3000
-npx mirb-cli 10.0.0.7 3000
-```
-
-### How this works, and the one way it breaks
-
-npm has no way to say "ship a different binary per platform" in a single package, so
-mirrorball uses the pattern esbuild, turbo, swc, biome and Rollup all landed on
-independently: one package per platform (`mirb-cli-darwin-arm64`, `mirb-cli-linux-x64`, …), each
-tagged with `os` and `cpu`, plus a root `mirb` package that lists all five as **optional**
-dependencies and whose `bin` entries are a tiny Node shim dispatching to whichever one
-landed.
-
-There is no `postinstall` download step. Nothing is fetched at install time beyond the
-packages themselves, so this works behind proxies, in offline mirrors, and under
-`--ignore-scripts`.
-
-The failure mode worth knowing: an optional dependency that will not install is skipped
-**silently**. If you installed with `--omit=optional` or `--no-optional`, the platform
-package is missing and the shim will tell you exactly that:
-
-```
-mirb: the platform package "mirb-cli-darwin-arm64" for darwin-arm64 is not installed.
-It is an optional dependency, so a failed or skipped optional install is silent.
-Try:  npm install mirb-cli-darwin-arm64
-```
-
-A clean reinstall (`rm -rf node_modules package-lock.json && npm install`) fixes it.
-
-Published tarballs carry [npm provenance](https://docs.npmjs.com/generating-provenance-statements),
-and the binaries inside them are the same bytes as the GitHub Release assets — the publish
-job downloads and verifies them against `checksums.txt` rather than rebuilding.
-
----
+Rather than publish under a name nobody would guess, mirrorball ships through the install
+script and the [GitHub Releases](https://github.com/heysanil/mirrorball-cli/releases) page.
+Both give you the same binary, verified against the same `checksums.txt`.
 
 ## From source
 
@@ -251,7 +207,6 @@ whenever stdout is not a terminal.)
 | Installed with | Upgrade |
 | --- | --- |
 | Install script | Re-run it. It resolves the latest release and replaces the binary in place. |
-| npm / bun | `npm install -g mirb-cli@latest`, `bun add -g mirb-cli@latest` |
 | Source | `git pull && bun install && bun run build` |
 
 To pin or roll back, pass a version:

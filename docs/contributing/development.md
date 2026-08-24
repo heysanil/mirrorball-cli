@@ -59,8 +59,7 @@ mirrorball-cli/
 ├── ui/                     rendering: tables, status lines, colour
 ├── test/                   one `<module>.test.ts` per module; fixtures/ holds the fake ssh
 ├── docs/                   the documentation site
-├── npm/                    per-platform npm packages (bin/ is generated, gitignored)
-└── scripts/                build-npm-packages.ts, install.sh, install.ps1
+└── scripts/                install.sh, install.ps1
 ```
 
 Two structural rules matter more than the rest:
@@ -201,4 +200,4 @@ currently four (`@bunli/core`, `@bunli/utils`, `nanoid`, `zod`) and that's a fea
 
 - [Testing](./testing.md) — the suite, and the fake-ssh harness that makes it possible
   to test ssh behaviour without an ssh server.
-- [Releasing](./releasing.md) — how a tag becomes binaries and npm packages.
+- [Releasing](./releasing.md) — how a tag becomes binaries and a GitHub release.

@@ -157,9 +157,7 @@ MIRB_VERSION=0.2.0 MIRB_INSTALL_DIR=/usr/local/bin \
 
 ## Repository tooling
 
-Not part of mirrorball's interface; listed so nobody has to grep for them.
-`scripts/build-npm-packages.ts` reads `MIRB_RELEASE_BASE_URL` (where the npm shims fetch
-binaries from) and `GITHUB_REPOSITORY` (the fallback for the repo slug). The test suite's
+Not part of mirrorball's interface; listed so nobody has to grep for them. The test suite's
 fake ssh is driven by `FAKE_SSH_*` variables, documented alongside it in
 [Testing](../contributing/testing.md).
 
