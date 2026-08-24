@@ -114,7 +114,7 @@ bun scripts/build-npm-packages.ts --source release --version 1.2.3 --repo heysan
 downloads otherwise. `--dry-run` prints the plan and writes nothing.
 
 `bunli.config.ts` must keep `build.compress: false`. With compression on, `bunli build` tars
-each per-target directory and deletes it; both this generator and `bunli-releaser` then find
+each per-target directory and deletes it; both this generator and the release workflow then find
 an archive where they expected a binary.
 
 ## Publishing

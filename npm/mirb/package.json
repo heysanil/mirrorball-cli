@@ -1,0 +1,38 @@
+{
+  "name": "mirb",
+  "version": "0.1.0",
+  "description": "mirrorball — instant SSH port forwarding. mirb 10.0.0.7 3000 3010 8080",
+  "keywords": [
+    "mirb",
+    "mirrorball",
+    "ssh",
+    "port-forwarding",
+    "tunnel",
+    "cli",
+    "bun",
+    "devtools"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heysanil/mirrorball-cli.git"
+  },
+  "homepage": "https://github.com/heysanil/mirrorball-cli",
+  "bin": {
+    "mirb": "bin/mirb",
+    "mirrorball": "bin/mirb"
+  },
+  "files": [
+    "bin"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "mirb-darwin-arm64": "0.1.0",
+    "mirb-darwin-x64": "0.1.0",
+    "mirb-linux-arm64": "0.1.0",
+    "mirb-linux-x64": "0.1.0",
+    "mirb-windows-x64": "0.1.0"
+  }
+}

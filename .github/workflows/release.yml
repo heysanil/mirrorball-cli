@@ -28,21 +28,56 @@ jobs:
       - name: Install with every platform's optional dependencies
         run: bun install --frozen-lockfile --os '*' --cpu '*'
 
-      # Cross-compiles every target in bunli.config.ts, packages each as
-      # mirb-<version>-<os>-<arch>.tar.gz (.zip on windows), writes checksums.txt, and
-      # uploads the lot to the GitHub Release for this tag.
+      - name: Derive version from the tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      # Everything below replaces AryaLabsHQ/bunli-releaser@v1, which its README documents
+      # but which was never tagged: the repository has branches and no tags at all, so `@v1`
+      # cannot resolve and the first real release failed with "unable to find version v1".
+      # Rather than pin an unversioned third party by SHA, the four things it did for us are
+      # spelled out here. They are not complicated, and this way the release pipeline has no
+      # dependency that can disappear.
       #
-      # bunli.config.ts must keep `build.compress: false`. With compression on, `bunli build`
-      # tars each per-target directory and deletes it, and this action's packaging step then
-      # finds an archive where it expected a binary and fails.
-      #
-      # No brew-* inputs: Homebrew distribution is deliberately out of scope.
-      - uses: AryaLabsHQ/bunli-releaser@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          # Idempotent: a re-run, or a tag whose assets were published by hand, should not
-          # fail the release for uploading something that is already there.
-          existing-assets: skip
+      # bunli.config.ts must keep `build.compress: false`: with compression on, `bunli build`
+      # tars each per-target directory and deletes it, and the packaging below then finds an
+      # archive where it expected a binary.
+      - name: Build every target
+        run: bunx bunli build --targets all
+
+      - name: Package archives and checksums
+        id: package
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          for dir in dist/*/; do
+            target=$(basename "$dir")
+            case "$target" in
+              windows-*) (cd "$dir" && zip -q "$GITHUB_WORKSPACE/release/mirb-$VERSION-$target.zip" mirb.exe) ;;
+              *)         tar -czf "release/mirb-$VERSION-$target.tar.gz" -C "$dir" mirb ;;
+            esac
+          done
+          # `<sha256>  <name>`, which is what scripts/install.sh and the npm generator parse.
+          (cd release && sha256sum mirb-* > checksums.txt)
+          echo "--- release assets ---"
+          ls -lh release
+          cat release/checksums.txt
+
+      - name: Publish the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          # Idempotent: the release may already exist if it was cut by hand or this job is a
+          # re-run. --clobber replaces an asset of the same name rather than failing.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" release/* --clobber
+          else
+            gh release create "$TAG" release/* --title "mirrorball $TAG" --generate-notes
+          fi
 
   npm:
     name: Publish to npm

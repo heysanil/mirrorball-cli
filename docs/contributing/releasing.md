@@ -15,9 +15,9 @@ Everything before it is a checklist.
 git push origin v0.2.0
         │
         ▼
-  .github/workflows  ──►  AryaLabsHQ/bunli-releaser@v1
+  .github/workflows/release.yml
         │
-        ├─ build job   bunli build, one binary per target
+        ├─ binaries    bunli build, one binary per target
         │              → mirb-0.2.0-darwin-arm64.tar.gz
         │                mirb-0.2.0-darwin-x64.tar.gz
         │                mirb-0.2.0-linux-arm64.tar.gz
@@ -36,11 +36,25 @@ Asset names are `mirb-<version>-<os>-<arch>` with no `v` on the version — `.ta
 unix targets, `.zip` for Windows. `checksums.txt` covers all five, and is what both
 `scripts/install.sh` and the npm packaging step verify downloads against.
 
-The five targets are declared in three places and all of them must agree:
-`build.targets` in `bunli.config.ts` (what gets compiled), `build.targets` in
-`.bunli-releaser.yml` (what the action packages and uploads), and `PLATFORMS` in
-`scripts/build-npm-packages.ts` (what gets published to npm, and what the shim's dispatch
-table is generated from). Adding a platform means editing all three in one commit.
+The five targets are declared in two places and both must agree: `build.targets` in
+`bunli.config.ts` (what gets compiled, and therefore what the packaging step finds in
+`dist/`), and `PLATFORMS` in `scripts/build-npm-packages.ts` (what gets published to npm,
+and what the shim's dispatch table is generated from). Adding a platform means editing both
+in one commit.
+
+> **Cross-compiling needs every platform's optional dependencies.** The OpenTUI runtime
+> packages are platform-gated, so a plain `bun install` fetches only the host's and
+> `bunli build --targets all` fails with *"Missing OpenTUI platform runtime packages
+> required for standalone compilation"*. The release job installs with
+> `bun install --frozen-lockfile --os '*' --cpu '*'`; do the same locally before building
+> all targets by hand.
+
+> **Why the workflow does its own packaging.** An earlier version delegated to
+> `AryaLabsHQ/bunli-releaser@v1`. That action's README documents the `v1` ref, but the
+> repository has never been tagged — only branches — so the reference cannot resolve, and
+> the first real release failed with *"unable to find version v1"*. The workflow now builds,
+> archives, checksums and uploads directly. It is a dozen lines, and it depends on nothing
+> that can vanish.
 
 ## How npm gets five binaries into one install
 
@@ -74,7 +88,7 @@ In `bunli.config.ts`:
 
 ```ts
 build: {
-  // MUST stay false: bunli-releaser expects per-target output dirs after `bunli build`.
+  // MUST stay false: the release job expects per-target output dirs after `bunli build`.
   compress: false,
   ...
 }
@@ -82,7 +96,7 @@ build: {
 
 Both consumers walk `dist/<target>/` and take the single executable inside it.
 With `compress: true`, `bunli build` produces `dist/<target>.tar.gz` instead and there is
-no directory to walk: `bunli-releaser` has nothing to package, and the npm script fails
+no directory to walk: the packaging step has nothing to archive, and the npm script fails
 with `dist/<target>.tar.gz found instead of dist/<target>/ — set build.compress = false in
 bunli.config.ts`. If a release publishes with assets missing, check this first.
 :::

@@ -34,7 +34,6 @@ bun install
 mirrorball-cli/
 ├── mirb.ts                 entry point; registers commands, normalizes argv
 ├── bunli.config.ts         CLI metadata and build targets
-├── .bunli-releaser.yml     what the release action builds and uploads
 ├── commands/               one file per subcommand, plus their shared helpers
 │   ├── up.ts               the default command — anything argv-shaped ends up here
 │   ├── ls.ts               list background sessions
