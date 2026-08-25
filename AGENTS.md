@@ -425,12 +425,17 @@ Honest list. None are secret; all were found by review rather than by users.
 `site/` builds **mirb.dev** with [Fumapress](https://press.fumadocs.dev) and deploys to
 Cloudflare Workers. `cd site && npm run dev`.
 
-**It is a Node/npm package inside a Bun repo, deliberately.** fumapress declares
-`engines.node >= 24`, is a Waku + Vite 8 RSC app, and patches module resolution in ways that
-assume npm-style hoisting. `site/package-lock.json` also tells Cloudflare Workers Builds to
-use npm and Node 24 with no configuration. The CLI package and `bun.lock` are untouched, and
-the root `tsconfig.json` `include` list does not mention `site/`, so `bun run typecheck`
-cannot see it.
+**Bun installs it; Node runs it.** These are separate choices and it is worth keeping them
+apart. fumapress declares `engines.node >= 24` and ships a `#!/usr/bin/env node` bin, so the
+build executes under Node — `bun run build` honours that shebang and hands off to Node. Bun
+is only the package manager, which keeps one lockfile format across the repo. Measured, not
+assumed: `bun install` produces the same flat hoisted layout as npm, resolves byte-identical
+versions of every direct dependency, and lands the esbuild and workerd platform binaries
+without any install-script approval.
+
+`site/.node-version` pins the runtime for Workers Builds; `BUN_VERSION` pins the installer.
+The CLI package and the root `bun.lock` are untouched, and the root `tsconfig.json` `include`
+list does not mention `site/`, so `bun run typecheck` at the root cannot see it.
 
 **Content lives in `docs/`, not in `site/`.** `dir: '../docs'` in `press.config.tsx`. The
 docs are read on GitHub as often as on the site, and every docs path in this file points at

@@ -34,26 +34,30 @@ jobs:
           # `lastModified: true` shells out to git log for each page's date.
           fetch-depth: 0
 
+      # Node is still the runtime — fumapress ships a `#!/usr/bin/env node` bin and
+      # declares engines.node >= 24. Bun is only the package manager, matching the CLI.
       - uses: actions/setup-node@v4
         with:
           node-version-file: site/.node-version
-          cache: npm
-          cache-dependency-path: site/package-lock.json
 
-      - run: npm ci
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - run: bun install --frozen-lockfile
 
       # Anchors and on-disk link targets, which the build cannot check: the link
       # validation plugin strips the #fragment before fetching, so a renamed heading
       # would otherwise break 68 links silently. Also catches raw HTML, which the
       # markdown compiler deletes rather than rejects.
-      - run: npm run check:docs
+      - run: bun run check:docs
 
-      - run: npx tsc --noEmit
+      - run: bunx tsc --noEmit
 
       # linkValidationPlugin fetches every rendered internal link against the built app
       # and fails on a 404, so this step is also the docs link checker.
       - name: Build
-        run: npm run build
+        run: bun run build
         env:
           # The adapter Workers Builds will select, so CI builds what production builds.
           CLOUDFLARE: '1'
