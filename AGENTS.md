@@ -436,6 +436,18 @@ cannot see it.
 docs are read on GitHub as often as on the site, and every docs path in this file points at
 the repo root. See the Conventions section for what that costs in exchange.
 
+**A content file cannot resolve bare imports on its own.** `docs/` is outside the Vite root,
+so Node's walk from a page goes `docs/explanation` → `docs` → repo root and never reaches
+`site/node_modules`. The `react/jsx-runtime` the MDX compiler injects into every page has
+nothing to resolve against. `resolveContentImports()` in `vite.config.ts` re-anchors those
+to the site — with `this.resolve`, not an alias, because `react/jsx-runtime` has a
+`react-server` export condition an alias would flatten.
+
+**This one is invisible on a dev machine.** The CLI's `bun install` leaves a
+`<repo>/node_modules` containing react as a transitive dep of bunli, which satisfies the
+import by accident. It built fine locally and failed on the first CI run. To reproduce a CI
+environment, `mv node_modules` aside and build.
+
 **It deploys as static assets with no Worker.** `mode: 'static'` prerenders all 24 routes and
 the search index, so there is nothing to run at request time. The adapter nonetheless builds
 a serverless entry and writes `.wrangler/deploy/config.json` redirecting `wrangler deploy` to
