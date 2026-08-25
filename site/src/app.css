@@ -139,6 +139,16 @@ code, pre, kbd, samp {
   padding: 0.1em 0.35em;
 }
 
+/* Inside a <pre> the chip treatment fights the block: every line picks up its own
+   tinted box and the whole transcript turns teal. The block already has a surface. */
+.landing pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
 .landing .section,
 .landing .hero {
   max-width: 68rem;
@@ -171,9 +181,9 @@ code, pre, kbd, samp {
   text-wrap: balance;
 }
 
-/* The two halves of the headline are the two states the tool separates. */
+/* The payoff half of the headline takes mirb's own accent. */
 .landing .hero-title-alt {
-  color: var(--warn);
+  color: var(--identity);
 }
 
 .landing .hero-sub {
@@ -182,6 +192,10 @@ code, pre, kbd, samp {
   line-height: 1.65;
   color: var(--dim);
   margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.landing .hero .swap {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
 }
 
 .landing .hero-cta {
@@ -396,6 +410,28 @@ code, pre, kbd, samp {
   color: var(--dim);
 }
 
+/* Inline prose links. The button and the Start-here list style themselves; without
+   this an <a> inside a paragraph was indistinguishable from the text around it. */
+.landing .section-lede a,
+.landing .section-foot a,
+.landing .hero-note a,
+.landing .swap-note a,
+.landing .term-caption a {
+  color: var(--identity);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--identity) 40%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease;
+}
+
+.landing .section-lede a:hover,
+.landing .section-foot a:hover,
+.landing .hero-note a:hover,
+.landing .swap-note a:hover,
+.landing .term-caption a:hover {
+  text-decoration-color: var(--identity);
+}
+
 .landing .section-lede { margin: 0 0 2.5rem; }
 .landing .section-foot { margin: 2rem 0 0; }
 .landing .section-foot strong { color: var(--text); font-weight: 600; }
@@ -511,6 +547,50 @@ code, pre, kbd, samp {
   color: var(--muted);
   padding-top: 0.9rem;
   border-top: 1px solid var(--rule-soft);
+}
+
+/* ------------------------------------------------------------ syntax table */
+
+.landing .syntax {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 34rem;
+}
+
+.landing .syntax th,
+.landing .syntax td {
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--dim);
+  font-weight: 400;
+  vertical-align: top;
+}
+
+.landing .syntax thead th {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.landing .syntax td:first-child { white-space: nowrap; }
+
+/* -------------------------------------------------------------- transcript */
+
+.landing .transcript {
+  margin: 0;
+  border: 1px solid var(--rule-soft);
+  border-radius: 10px;
+  background: var(--panel);
+  padding: 1.2rem 1.35rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.7rem, 1.35vw, 0.82rem);
+  line-height: 1.8;
+  color: var(--dim);
+  overflow-x: auto;
 }
 
 /* ---------------------------------------------------------------- comparison */

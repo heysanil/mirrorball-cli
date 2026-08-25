@@ -34,9 +34,9 @@ const LABEL: Record<ForwardState, string> = {
 /**
  * The hero: `mirb 10.0.0.7 3000 3010 8080`, playing out once on load.
  *
- * This is not a decorative animation. It is the product's actual state machine —
- * two ports resolve to `ready`, the third to `refused` — and watching the third one
- * settle into amber is the fastest way to explain what `ssh -L` cannot tell you.
+ * This is not a decorative animation. It is the product's actual state machine, and it
+ * shows the thing the page is selling: three ports forwarded from one short command.
+ * That the third one reports `refused` is a real detail, not the headline.
  *
  * With reduced motion requested, it renders the settled frame directly. The argument
  * survives without the motion; only the reveal is lost.
@@ -115,8 +115,8 @@ export function Terminal() {
       <p className="term-caption">
         {degraded ? (
           <>
-            Two ports are carrying traffic. The third is a perfectly healthy tunnel to a
-            service that is not running — <strong>and it says so</strong>.
+            Three forwards from <strong>one command</strong>. Each row says whether the far
+            end actually answered — here the third service is not running yet.
           </>
         ) : (
           <>Binding the local ports, then probing the far end of each one…</>
