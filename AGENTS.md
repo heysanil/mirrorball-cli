@@ -453,6 +453,17 @@ to the site — with `this.resolve`, not an alias, because `react/jsx-runtime` h
 import by accident. It built fine locally and failed on the first CI run. To reproduce a CI
 environment, `mv node_modules` aside and build.
 
+**Deploys run on push to `main`,** through Cloudflare Workers Builds connected to this repo:
+root directory `site`, build `bun run build`, deploy `bunx wrangler deploy`. `BUN_VERSION`
+pins the installer and `site/.node-version` pins the runtime. Workers Builds sets
+`WORKERS_CI=1`, which is what makes fumapress select the Cloudflare adapter, so CI builds
+what production builds. A manual `bunx wrangler deploy` from `site/` still works and is the
+fallback if the pipeline is ever wedged.
+
+The `mirb.dev` custom domain is attached to the Worker out of band and is **not** in
+`wrangler.jsonc` — see below for why that is not optional. Wrangler leaves existing routes
+alone when the deployed config has no `routes` key, so it survives every deploy.
+
 **It deploys as static assets with no Worker.** `mode: 'static'` prerenders all 24 routes and
 the search index, so there is nothing to run at request time. The adapter nonetheless builds
 a serverless entry and writes `.wrangler/deploy/config.json` redirecting `wrangler deploy` to
